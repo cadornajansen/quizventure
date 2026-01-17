@@ -1,3 +1,10 @@
 [build]
-  publish = "."
-  functions = "netlify/functions"
+  publish = "public"
+  functions = "netlify/function"
+  command = "echo 'Static site - no build needed'"
+
+# Redirects for SPA routing - redirect all 404s to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
