@@ -1,0 +1,8 @@
+{
+  "name": "quizventure-functions",
+  "version": "1.0.0",
+  "description": "Netlify serverless functions for Supabase auth",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  }
+}
