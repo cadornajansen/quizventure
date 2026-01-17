@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Start Learning - Quizventure Time</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <div class="panel wide">
+      <div class="topbar">
+        <h1 class="title small" style="margin:0;">START LEARNING</h1>
+        <div class="topbar-right">
+          <button id="dashboard" class="btn login" type="button">Dashboard</button>
+          <button id="logout" class="btn logout" type="button">Log out</button>
+        </div>
+      </div>
+
+      <p id="who" class="small-note"></p>
+
+      <div class="cardish">
+        <h2 class="h2">Lesson 1: Sample</h2>
+        <p class="p">Put your lessons, quizzes, or modules here. This page is protected: only logged-in users can access it.</p>
+      </div>
+
+      <div class="row">
+        <a class="link" href="index.html">Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/auth.js"></script>
+  <script>
+    qvRequireAuth({ redirectTo: 'login.html' });
+
+    const user = qvGetCurrentUser();
+    if (user) {
+      document.getElementById('who').textContent = `Signed in as ${user.name} (${user.email})`;
+    }
+
+    document.getElementById('dashboard').addEventListener('click', () => {
+      location.href = 'dashboard.html';
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      qvLogout();
+      location.replace('index.html');
+    });
+  </script>
+</body>
+</html>
+

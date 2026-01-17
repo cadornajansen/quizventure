@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 1: Variables in Java | Quizventure Time</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Master Java variables with examples and hands-on exercises!">
+
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* Global Styles */
+body {
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(135deg, #9ddcff 0%, #eaf7ff 50%, #ffd400 100%);
+  background-attachment: fixed;
+  margin: 0;
+  color: #333;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+  background: #1e1e1e;
+  padding: 20px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+.navbar a {
+  color: white;
+  margin: 0 20px;
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.navbar a:hover, .navbar a:focus {
+  background: #ffd400;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transform: translateY(-3px) rotate(2deg);
+  box-shadow: 0 4px 12px rgba(255,212,0,0.5);
+}
+
+/* Title */
+.title {
+  background: linear-gradient(45deg, #4aaef2, #55b6ff);
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 24px;
+  border-bottom: 6px solid black;
+  text-shadow: 2px 2px 0px #000;
+  transition: all 0.3s ease;
+}
+.title:hover {
+  letter-spacing: 3px;
+  transform: scale(1.02);
+}
+
+/* Progress Bar */
+.progress {
+  max-width: 1100px;
+  margin: 20px auto;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 20px;
+}
+.progress-bar {
+  background: linear-gradient(90deg, #ffd400, #ff6b35);
+  width: 11%; /* Progress for Lesson 1 */
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+/* Lesson Content */
+.lesson-content {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #c97b1d, #ff8c42);
+  border: 6px solid black;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.lesson-content h1 {
+  font-size: 20px;
+  color: #ffd400;
+  text-shadow: 1px 1px 0px #000;
+  margin-bottom: 20px;
+}
+
+.lesson-content h2 {
+  font-size: 16px;
+  color: #55b6ff;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.lesson-content p, .lesson-content ul {
+  font-size: 12px;
+  color: white;
+  margin: 10px 0;
+}
+.lesson-content ul {
+  padding-left: 20px;
+}
+.lesson-content li {
+  margin-bottom: 5px;
+}
+
+/* Summary Box */
+.summary {
+  background: linear-gradient(135deg, #43a6f0, #55b6ff);
+  border: 4px solid black;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  color: white;
+}
+.summary h3 {
+  font-size: 14px;
+  color: #ffd400;
+  margin-bottom: 10px;
+}
+
+/* Code Blocks */
+pre {
+  background: linear-gradient(135deg, #1e2a44, #2a3a5c);
+  color: #e0e0e0;
+  padding: 20px;
+  border: 4px solid black;
+  border-radius: 8px;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+pre:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(255,212,0,0.7), inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+    :root {
+  --bg-sky: #9ad0f5;
+  --ui-primary: #2c3e50;
+  --accent: #ffd54f;
+  --white: #ffffff;
+  --link: #00d4ff;
+  --shadow: rgba(0,0,0,0.35);
+}
+
+   .nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--ui-primary);
+  border-bottom: 4px solid #0f141b;
+  box-shadow: 0 4px 0 #0f141b;
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  text-shadow: 0 2px 0 #8a6f00;
+}
+.brand img {
+  width: 28px; height: 28px;
+}
+.nav-links {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+}
+.nav-links a {
+  padding: 8px 12px;
+  color: #e6f3ff;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border: 3px solid #0f141b;
+  background: #243a52;
+  box-shadow: 0 3px 0 #0f141b;
+}
+.nav-links a:hover {
+  filter: brightness(1.1);
+}
+.nav-links a.active {
+  background: #345474;
+  color: var(--accent);
+}
+/* Footer */
+.footer {
+  background: #1e1e1e;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top: 4px solid #ffd400;
+}
+.footer a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Print Styles */
+@media print {
+  .navbar, .progress, .footer, .navigation {
+    display: none;
+  }
+  .lesson-content {
+    background: white;
+    border: none;
+    padding: 20px;
+    margin: 0;
+    color: black;
+  }
+  .summary {
+    background: #f4f4f4;
+    border: 1px solid #333;
+    color: black;
+  }
+  pre {
+    background: #f4f4f4;
+    color: black;
+    border: 1px solid #333;
+  }
+}
+
+@media screen and (max-width: 767px) {
+body {
+  background: url('respobg1.gif') no-repeat center center; 
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.nav-links {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.nav-links a {
+  flex: 1;
+  text-align: center;
+  display: flex;              /* ✅ icon + text side by side */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.nav-links a img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated; /* crisp retro look */
+}
+}
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .nav-links a img {
+    width: 14px;
+    height: 14px;
+  }
+}
+</style>
+  <script src="../js/auth.js"></script>
+</head>
+
+<body>
+  <script>qvRequireAuth({ redirectTo: "login.html" });</script>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="logo.png" alt="Quizventure brand" />
+        <span>Quizventure Time</span>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html">HOME</a>
+      <a href="bimo.html">QUIZ</a>
+      <a href="leader.html">LEADERBOARD</a>
+      <a href="aboutpage.html">ABOUT</a>
+      <a href="developers.html">Developers</a>
+      <a href="contact.html">CONTACT</a>
+      <a href="hsh.html">RESOURCES</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="title">LESSON 1: VARIABLES IN JAVA</div>
+
+<div class="progress">
+  <div class="progress-bar"></div>
+</div>
+
+<main class="lesson-content">
+  <div class="summary">
+    <h3>Lesson Summary</h3>
+    <p>In this foundational lesson, you'll learn about variables in Java—the named containers that store data for your programs. Variables are essential for holding values like numbers, text, or other information, allowing your code to be dynamic and reusable. We'll cover what variables are, their components (data type, name, and value), how to declare and initialize them, and best practices. By the end, you'll see practical examples and exercises to build your understanding.</p>
+  </div>
+
+  <h1>Lesson 1: Variables in Java</h1>
+  <p>Variables are like treasure chests in your code—named containers that store data for later use. Think of them as placeholders for numbers, text, or other info! Without variables, your programs would be static and inflexible. In Java, variables must be declared with a type, making the language statically typed and helping prevent bugs.</p>
+
+  <h2>Components of a Variable</h2>
+  <p>Every variable has three key parts:</p>
+  <ul>
+    <li><strong>Data Type:</strong> Defines what kind of data the variable can hold (e.g., numbers, words, or true/false). This is crucial in Java.</li>
+    <li><strong>Name:</strong> A unique identifier (like a label) that you use to refer to the variable. It should be descriptive and follow naming conventions (e.g., camelCase).</li>
+    <li><strong>Value:</strong> The actual data stored inside. This can be assigned at declaration or later.</li>
+  </ul>
+  <p>Variables make your code readable and maintainable—imagine trying to remember raw numbers everywhere!</p>
+
+  <h2>Declaring and Initializing Variables</h2>
+  <p>Declaration tells Java about the variable's type and name. Initialization assigns a value. You can do both in one step or separately.</p>
+  <pre>
+// Declaration only
+int age;
+
+// Declaration and initialization
+int age = 20;
+
+// Multiple variables
+int x = 5, y = 10;
+  </pre>
+  <p><em>Pro Tip:</em> Choose descriptive names to make your code readable! Avoid names like 'a' or 'temp'—use 'playerScore' instead.</p>
+
+  <h2>Variable Naming Rules and Conventions</h2>
+  <p>Java has strict rules: Names must start with a letter, underscore (_), or dollar sign ($), and can include numbers. They're case-sensitive (e.g., 'age' ≠ 'Age'). Conventions include camelCase for variables (e.g., 'userName') and avoiding keywords like 'int' or 'class'.</p>
+
+  <h2>Scope and Lifetime</h2>
+  <p>Variables have a scope (where they're accessible) and lifetime (how long they exist). Local variables (inside methods) are created when the method runs and destroyed when it ends. Instance variables (in classes) last as long as the object.</p>
+
+  <h2>Examples and Code Snippets</h2>
+  <p>Let's see variables in action with simple examples.</p>
+  <pre>
+// Basic variable usage
+String name = "Quizventurer";
+int score = 100;
+double health = 95.5;
+
+System.out.println("Player: " + name);
+System.out.println("Score: " + score);
+System.out.println("Health: " + health);
+  </pre>
+
+  <h2>Try It Yourself: Variable Exercises</h2>
+  <p>Copy these into a Java file (e.g., VariablesDemo.java) and run them to see the output. Experiment by changing values!</p>
+  <h3>Exercise 1: Basic Declarations</h3>
+  <pre>
+public class VariablesDemo {
+  public static void main(String[] args) {
+    // Declare and initialize
+    int level = 5;
+    String gameTitle = "Quizventure Time";
+    boolean isCompleted = false;
+
+    // Output
+    System.out.println("Game: " + gameTitle);
+    System.out.println("Level: " + level);
+    System.out.println("Completed: " + isCompleted);
+
+    // Modify and re-output
+    level = 6;
+    isCompleted = true;
+    System.out.println("Updated Level: " + level);
+    System.out.println("Updated Completed: " + isCompleted);
+  }
+}
+// Output:
+// Game: Quizventure Time
+// Level: 5
+// Completed: false
+// Updated Level: 6
+// Updated Completed: true
+  </pre>
+
+  <h3>Exercise 2: Calculations with Variables</h3>
+  <pre>
+public class VariableMath {
+  public static void main(String[] args) {
+    double price = 49.99;
+    int quantity = 3;
+    double total = price * quantity;
+
+    System.out.println("Price per item: $" + price);
+    System.out.println("Quantity: " + quantity);
+    System.out.println("Total cost: $" + total);
+
+    // Bonus: String concatenation
+    String receipt = "Total for " + quantity + " items: $" + total;
+    System.out.println(receipt);
+  }
+}
+// Output:
+// Price per item: $49.99
+// Quantity: 3
+// Total cost: $149.97
+// Total for 3 items: $149.97
+  </pre>
+
+  <h2>Common Mistakes and Tips</h2>
+  <p>Avoid undeclared variables (compile error) or uninitialized use (runtime issues). Use final for constants (e.g., final int MAX_SCORE = 100). In games, variables track player stats—practice by creating a simple character profile!</p>
+  <p><em>Challenge:</em> Create variables for your favorite game character's name, health, and score, then print a summary.</p>
+
+  <div class="navigation">
+    <a href="ok.html"><i class="fas fa-home"></i> Back to Lessons</a>
+    <a href="lesson2.html">Next: Lesson 2 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Ready to test your skills? Jump into the <a href="bimo.html">QUIZ</a> and climb the <a href="#">LEADERBOARD</a>! 🚀</p>
+  <p>&copy; 2026 Quizventure Time. Code your way to victory!</p>
+</footer>
+
+</body>
+</html>

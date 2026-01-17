@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Learning World</title>  <!-- Pixel game font -->  
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />  
+  <link rel="stylesheet" href="../css/lesson.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      background: url('bglessons.png') no-repeat center center fixed;
+      background-size: 100% 100%;
+    }
+
+    :root {
+  --bg-sky: #9ad0f5;
+  --ui-primary: #2c3e50;
+  --accent: #ffd54f;
+  --white: #ffffff;
+  --link: #00d4ff;
+  --shadow: rgba(0,0,0,0.35);
+}
+
+   .nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--ui-primary);
+  border-bottom: 4px solid #0f141b;
+  box-shadow: 0 4px 0 #0f141b;
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  text-shadow: 0 2px 0 #8a6f00;
+}
+.brand img {
+  width: 28px; height: 28px;
+}
+.nav-links {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+}
+.nav-links a {
+  padding: 8px 12px;
+  color: #e6f3ff;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border: 3px solid #0f141b;
+  background: #243a52;
+  box-shadow: 0 3px 0 #0f141b;
+}
+.nav-links a:hover {
+  filter: brightness(1.1);
+}
+.nav-links a.active {
+  background: #345474;
+  color: var(--accent);
+}
+
+    .ribbon {
+      text-align: center;
+      font-size: 22px;
+      margin-top: .4rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.2rem;
+    }
+
+    .card {
+      background: #d8830a;
+      border: 6px solid #000;
+      border-radius: 22px;
+      padding: 1.2rem 1.4rem;
+      color: #fff;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 8px 0 #000;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    h2 {
+      margin: 0 0 .7rem 0;
+      color: #0a2e98;
+      font-size: 18px;
+    }
+
+    p {
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    ul { list-style: none; margin: 0; padding: 0; }
+
+    .lesson-link {
+      padding: .7rem .8rem;
+      margin-bottom: .45rem;
+      background: rgba(0,0,0,.18);
+      border-radius: 12px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: .15s;
+    }
+
+    .lesson-link:hover { background: rgba(0,0,0,.28); transform: translateY(-2px); }
+
+    .tips li { font-size: 10px; margin-bottom: .8rem; }
+
+    /* LESSON SCREEN */
+    .lesson-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: rgba(0,0,0,.55);
+      place-items: center;
+      padding: 1rem;
+    }
+
+    .lesson-box {
+      background: #fff7e1;
+      border: 6px solid #000;
+      border-radius: 22px;
+      box-shadow: 0 10px 0 #000;
+      padding: 1.2rem 1.4rem;
+      max-width: 540px;
+      width: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    .lesson-box h3 {
+      margin-top: 0;
+    }
+
+    .close-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      background: #ffb703;
+      padding: .5rem .8rem;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+  .footer {
+  background: #1e1e1e;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top: 4px solid #ffd400;
+}
+.footer a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+@media screen and (max-width: 767px) {
+body {
+  background: url('respobg1.gif') no-repeat center center; 
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.nav-links {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.nav-links a {
+  flex: 1;
+  text-align: center;
+  display: flex;              /* ✅ icon + text side by side */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.nav-links a img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated; /* crisp retro look */
+}
+}
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .nav-links a img {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+  </style></head>
+<body>  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="logo.png" alt="Quizventure brand" />
+        <span>Quizventure Time</span>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html">HOME</a>
+      <a href="bimo.html">QUIZ</a>
+      <a href="leader.html">LEADERBOARD</a>
+      <a href="aboutpage.html">ABOUT</a>
+      <a href="developers.html">Developers</a>
+      <a href="contact.html">CONTACT</a>
+      <a href="hsh.html">RESOURCES</a>
+      </div>
+    </div>
+  </nav>
+<div class="ribbon">JavaScript</div>
+<div class="container">
+  <div class="card">
+    <h2>OVERVIEW</h2>
+    <p>
+      History: Created in 1995 by Brendan Eich<br>
+      Uses: Web interactivity, front-end frameworks, server-side with Node.js<br>
+      Difficulty: Medium
+    </p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>LESSONS</h2>
+      <ul>
+        <li class="lesson-link" data-title="Variables" data-text="Learn var, let, const.">Lesson 1: Variables</li>
+        <li class="lesson-link" data-title="Functions" data-text="Define and call functions.">Lesson 2: Functions</li>
+        <li class="lesson-link" data-title="Events" data-text="Respond to user actions with event listeners.">Lesson 3: Events</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>LESSONS</h2>
+      <ul>
+        <li class="lesson-link" data-title="DOM Manipulation" data-text="Change HTML and CSS dynamically.">Lesson 1: DOM Manipulation</li>
+        <li class="lesson-link" data-title="Objects" data-text="Work with key-value pairs.">Lesson 2: Objects</li>
+        <li class="lesson-link" data-title="Arrays" data-text="Store multiple values and loop through them.">Lesson 3: Arrays</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>TIPS</h2>
+      <ul class="tips">
+        <li>Tip 1: Practice debugging with console.log</li>
+        <li>Tip 2: Learn ES6+ features</li>
+        <li>Fun Fact: JavaScript was created in just 10 days!</li>
+      </ul>
+    </div>
+  </div>
+</div>
+

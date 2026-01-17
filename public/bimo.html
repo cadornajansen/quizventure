@@ -1,0 +1,4871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pixel Java Quiz Adventure</title>
+
+  <!-- Auth (static-site demo) -->
+  <script src="../js/auth.js"></script>
+  <script>
+    // Lock this page behind login
+    qvRequireAuth({ redirectTo: 'login.html' });
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{
+      height:100%;
+      background:#101e2b;
+      font-family:'Press Start 2P',monospace;
+      color:#eaf7ff;
+    }
+
+    body{
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+
+    .lesson-search-wrap{
+  margin-top:6px;
+}
+
+.lesson-search{
+  width:100%;
+  padding:4px 6px;
+  border-radius:6px;
+  border:2px solid #000;
+  font-size:8px;
+  font-family:'Press Start 2P',monospace;
+  background:#0b151f;
+  color:#eaf7ff;
+}
+.lesson-search::placeholder{
+  color:#6fa4bf;
+}
+
+    .game-shell{
+      width:100%;
+      max-width:1080px;
+      min-height:640px;
+      margin:10px;
+      background:linear-gradient(#183a42,#407c84);
+      border-radius:12px;
+      border:4px solid #101e2b;
+      display:grid;
+      grid-template-columns:260px 1fr 260px;
+      column-gap:0;
+      overflow:hidden;
+      box-shadow:0 18px 0 #0b151f,0 24px 40px rgba(0,0,0,0.85);
+    }
+
+    .chip{
+      font-size:10px;
+      background:#101e2b;
+      color:#fff;
+      padding:3px 10px;
+      border-radius:20px;
+      border:2px solid #000;
+      box-shadow:0 3px 0 rgba(0,0,0,0.7);
+    }
+
+    button{
+      font-family:'Press Start 2P',monospace;
+      border:none;
+      cursor:pointer;
+      transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    }
+    button:active{
+      transform:translateY(2px);
+      box-shadow:none !important;
+    }
+
+    /* LEFT PANEL */
+    .left-panel{
+      background:#183a42;
+      border-right:3px solid #101e2b;
+      padding:12px 10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .left-top-icons{
+      display:flex;
+      gap:8px;
+    }
+    .square-icon{
+      width:44px;height:44px;
+      border-radius:10px;
+      background:#101e2b;
+      border:3px solid #000;
+      box-shadow:0 4px 0 rgba(0,0,0,0.7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      color:#eaf7ff;
+    }
+    .square-icon:hover{filter:brightness(1.1);transform:translateY(-1px);}
+
+    .course-language-label{
+      margin-top:6px;
+      font-size:9px;
+      color:#bfe9ff;
+    }
+    .course-language-label span.course-name{
+      color:#ffffff;
+    }
+
+    .activities-title{
+      font-size:9px;
+      color:#bfe9ff;
+      margin-top:4px;
+      margin-bottom:3px;
+    }
+
+    .activity-list{
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+      font-size:8px;
+    }
+
+    .activity-group{
+      background:#101e2b;
+      border-radius:8px;
+      border:2px solid #000;
+      box-shadow:3px 3px 0 rgba(0,0,0,0.7);
+      padding:4px;
+    }
+
+    .activity-main{
+      background:#ffe7a6;
+      border-radius:6px;
+      padding:4px 5px;
+      cursor:pointer;
+      color:#101e2b;
+    }
+    .activity-main:hover{background:#ffefc3;}
+
+    .activity-subtopics{
+      margin-top:4px;
+      display:none;
+    }
+    .activity-group.open .activity-subtopics{display:block;}
+
+    .activity-subheader{
+      margin-top:3px;
+      padding:3px 4px;
+      background:#8bbe93;
+      color:#10231f;
+      border-radius:4px;
+      cursor:pointer;
+    }
+    .activity-subheader:hover{background:#a4d6ab;}
+
+    .activity-sublist{
+      margin-top:3px;
+      padding-left:4px;
+      display:none;
+    }
+    .activity-subheader.open + .activity-sublist{display:block;}
+
+    .activity-sub{
+      width:100%;
+      margin-bottom:3px;
+      padding:3px 4px;
+      font-size:8px;
+      text-align:left;
+      border-radius:4px;
+      background:#f7f7f7;
+      color:#101e2b;
+      box-shadow:2px 2px 0 rgba(0,0,0,0.7);
+    }
+    .activity-sub:hover{background:#ffffff;}
+
+    /* CENTER PANEL */
+    .center-panel{
+      background:#407c84;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+    }
+
+    .screen{
+      width:100%;
+      max-width:640px;
+      height:320px;
+      border-radius:12px;
+      background:linear-gradient(#8bbe93,#cbeed0);
+      border:4px solid #000;
+      box-shadow:6px 6px 0 rgba(0,0,0,0.7);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .screen-inner{
+      position:absolute;
+      inset:10px;
+      background:rgba(255,255,255,0.15);
+      border-radius:8px;
+      border:2px solid rgba(0,0,0,0.35);
+      padding:8px 10px 6px;
+    }
+
+    .screen-top-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:4px;
+    }
+    .screen-top-left{
+      flex:1;
+      min-width:0;
+      font-size:10px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .question-block{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      margin-top:2px;
+      height:138px;
+      overflow:hidden;
+    }
+
+    .question-text{
+      font-size:10px;
+      line-height:1.45;
+      white-space:pre-wrap;
+      overflow-y:auto;
+    }
+
+    .answers-text{
+      font-size:9px;
+      line-height:1.5;
+      white-space:pre-wrap;
+      overflow-y:auto;
+    }
+
+    .hero-area{
+      margin-top:4px;
+      height:170px;
+      border-radius:8px;
+      border:3px solid #000;
+      overflow:hidden;
+      background:#6ac6ff url('background.png') bottom center/cover no-repeat;
+      position:relative;
+    }
+    .hero-area,
+    .hero-area *{
+      image-rendering:pixelated;
+    }
+
+    .hero-extra-bmo{
+      position:absolute;
+      left:-60px;
+      bottom:25px;
+      width:110px;
+      height:180px;
+      background:url('bmo-side.jpg') left/contain no-repeat;
+      image-rendering:pixelated;
+      z-index:1;
+      animation:bmoBlink 4s infinite;
+    }
+
+    @keyframes bmoBlink{
+      0%,92%,100%{filter:none;}
+      94%,96%{filter:brightness(0.3);}
+    }
+
+    .hero-finn,
+    .hero-jake,
+    .hero-lich{
+      position:absolute;
+      bottom:6px;
+      transform-origin:bottom center;
+      z-index:2;
+      animation-timing-function:ease-in-out;
+      animation-iteration-count:infinite;
+      animation-direction:alternate;
+    }
+
+    .hero-finn,
+    .hero-jake{
+      bottom:70px;
+    }
+    .hero-lich{
+      bottom:55px;
+    }
+
+    .hero-finn{
+      left:10%;
+      width:72px;
+      animation-name:finnIdle;
+      animation-duration:1.4s;
+    }
+
+    .hero-jake{
+      left:19%;
+      width:68px;
+      animation-name:jakeIdle;
+      animation-duration:1.1s;
+    }
+
+    .hero-lich{
+      right:9%;
+      width:82px;
+      animation-name:lichIdle;
+      animation-duration:1.6s;
+    }
+
+    .hero-finn img,
+    .hero-jake img,
+    .hero-lich img{
+      width:100%;
+      height:auto;
+      display:block;
+      image-rendering:pixelated;
+      filter:drop-shadow(0 2px 0 rgba(0,0,0,0.8));
+    }
+
+    @keyframes finnIdle{
+      0%{transform:translateY(0);}
+      100%{transform:translateY(-3px);}
+    }
+    @keyframes jakeIdle{
+      0%{transform:translateY(-1px);}
+      100%{transform:translateY(2px);}
+    }
+    @keyframes lichIdle{
+      0%{transform:translateY(0);}
+      100%{transform:translateY(-2px) scale(1.01);}
+    }
+
+    @keyframes finnAttack{
+      0%{transform:translate(0,0);}
+      35%{transform:translate(40px,-8px) scale(1.05);}
+      60%{transform:translate(32px,-2px);}
+      100%{transform:translate(0,0);}
+    }
+    @keyframes jakeAttack{
+      0%{transform:translate(0,0);}
+      30%{transform:translate(32px,-4px) scale(1.08);}
+      55%{transform:translate(26px,0);}
+      100%{transform:translate(0,0);}
+    }
+    @keyframes lichHit{
+      0%{transform:translateX(0);}
+      20%{transform:translateX(6px);}
+      40%{transform:translateX(-6px);}
+      60%{transform:translateX(3px);}
+      100%{transform:translateX(0);}
+    }
+    @keyframes lichAttack{
+      0%{transform:translateX(0);}
+      40%{transform:translateX(-40px) scale(1.05);}
+      100%{transform:translateX(0);}
+    }
+    @keyframes heroHit{
+      0%{transform:translateX(0);}
+      20%{transform:translateX(-4px);}
+      40%{transform:translateX(4px);}
+      100%{transform:translateX(0);}
+    }
+    @keyframes heroDefeated{
+      0%{opacity:1;transform:translateY(0) scale(1);}
+      60%{opacity:1;transform:translateY(12px) scale(0.97);}
+      100%{opacity:0;transform:translateY(42px) scale(0.9);}
+    }
+    @keyframes lichDefeated{
+      0%{opacity:1;transform:translateY(0) scale(1);}
+      40%{opacity:.7;transform:translateY(8px) scale(0.98);}
+      100%{opacity:0;transform:translateY(40px) scale(0.85);}
+    }
+
+    .hero-finn.attack{
+      animation:finnAttack .65s ease-out forwards;
+    }
+    .hero-jake.attack{
+      animation:jakeAttack .65s ease-out forwards;
+    }
+    .hero-lich.hit{
+      animation:lichHit .45s ease-out forwards;
+    }
+    .hero-lich.attack{
+      animation:lichAttack .7s ease-out forwards;
+    }
+    .hero-finn.hit,
+    .hero-jake.hit{
+      animation:heroHit .5s ease-out forwards;
+    }
+    .hero-finn.defeated,
+    .hero-jake.defeated{
+      animation:heroDefeated .8s ease-out forwards;
+    }
+    .hero-lich.defeated{
+      animation:lichDefeated .9s ease-out forwards;
+    }
+    .hero-lich.dead{
+      opacity:0;
+      transform:translateY(40px) scale(0.9);
+      pointer-events:none;
+    }
+
+    .controls-row{
+      width:100%;
+      max-width:520px;
+      margin-top:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .submit-column{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:5px;
+    }
+
+    .big-yellow{
+      width:70px;height:70px;
+      border-radius:18px;
+      background:#ffd94a;
+      border:4px solid #000;
+      box-shadow:0 7px 0 rgba(0,0,0,0.75);
+      position:relative;
+    }
+    .big-yellow::before{
+      content:"";
+      position:absolute;
+      width:28px;height:10px;
+      background:#ffeeb0;
+      border-radius:6px;
+      top:22px;left:21px;
+      border:3px solid #000;
+    }
+
+    .submit-label{
+      font-size:9px;
+      margin-top:2px;
+    }
+
+    .fake-lights{
+      display:flex;
+      gap:6px;
+      margin-top:3px;
+    }
+    .fake-light{
+      width:22px;height:8px;
+      border-radius:10px;
+      background:#dfe9f8;
+      border:3px solid #000;
+      box-shadow:0 3px 0 rgba(0,0,0,0.7);
+    }
+
+    .side-buttons{
+      display:grid;
+      grid-template-columns:repeat(2,auto);
+      gap:6px 16px;
+      align-items:center;
+      justify-items:center;
+    }
+
+    .round-btn{
+      width:40px;height:40px;
+      border-radius:14px;
+      border:4px solid #000;
+      box-shadow:0 5px 0 rgba(0,0,0,0.7);
+      position:relative;
+    }
+    .round-btn.small{width:34px;height:34px;}
+
+    .round-btn.blue{background:#2967d8;}
+    .round-btn.green{background:#3fbf7f;}
+    .round-btn.yellow{background:#ffd94a;}
+    .round-btn.red{background:#f44336;}
+    .round-btn.purple{background:#9c27b0;}
+
+    .round-btn-icon{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      color:#fff;
+      text-shadow:0 2px 0 rgba(0,0,0,0.6);
+    }
+
+    .btn-label{
+      font-size:8px;
+      margin-top:3px;
+    }
+
+    .letter-grid{
+      margin-top:8px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .letter-pill{
+      position:relative;
+      width:46px;height:46px;
+      border-radius:10px;
+      border:4px solid #000;
+      box-shadow:0 5px 0 rgba(0,0,0,0.7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      color:#fff;
+    }
+    .letter-pill.red{background:#d13a46;}
+    .letter-pill.blue{background:#2967d8;}
+    .letter-pill.orange{background:#d16a3a;}
+    .letter-pill.green{background:#4fa83b;}
+    .letter-pill.selected{
+      outline:3px solid #fff;
+      outline-offset:2px;
+    }
+    .letter-pill.selected::before{
+      content:"▲";
+      position:absolute;
+      top:-14px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:14px;
+      color:#fff;
+      text-shadow:0 2px 0 #000;
+    }
+
+    /* RIGHT PANEL */
+    .right-panel{
+      background:#183a42;
+      border-left:3px solid #101e2b;
+      padding:12px 10px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+    }
+
+    .map-card{
+      width:100%;
+      border-radius:10px;
+      border:4px solid #000;
+      background:#407c84;
+      box-shadow:0 6px 0 rgba(0,0,0,0.8);
+      padding:6px 6px 8px;
+      font-size:8px;
+      color:#eaf7ff;
+      position:relative;
+      cursor:pointer;
+    }
+    .map-card h3{
+      font-size:8px;
+      margin-bottom:4px;
+    }
+    .map-track{
+      position:relative;
+      margin-top:3px;
+      height:70px;
+      border-radius:6px;
+      background:#183a42;
+      border:2px solid #000;
+      overflow:hidden;
+    }
+    .map-line{
+      position:absolute;
+      left:6px;right:6px;
+      height:1px;
+      background:#4ba5b5;
+      opacity:0.7;
+    }
+    .map-line:nth-child(1){top:10px;}
+    .map-line:nth-child(2){top:22px;}
+    .map-line:nth-child(3){top:34px;}
+    .map-line:nth-child(4){top:46px;}
+    .map-line:nth-child(5){top:58px;}
+
+    .map-marker{
+      position:absolute;
+      width:13px;height:13px;
+      border-radius:50%;
+      background:#ff5252;
+      border:3px solid #000;
+      transform:translate(6px,28px);
+      transition:transform .4s ease;
+    }
+    .map-marker::after{
+      content:"";
+      position:absolute;
+      inset:2px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,0.8);
+    }
+
+    .map-footer{
+      margin-top:4px;
+      line-height:1.6;
+    }
+
+    .avatar-row{
+      margin-top:4px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .avatar-chip{
+      font-size:8px;
+    }
+
+    .map-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.7);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+    }
+    .map-overlay.show{display:flex;}
+    .map-overlay-inner{
+      width:90%;
+      max-width:600px;
+      border-radius:12px;
+      background:#183a42;
+      border:4px solid #000;
+      padding:10px;
+      color:#eaf7ff;
+    }
+    .map-overlay h2{
+      font-size:11px;
+      margin-bottom:6px;
+    }
+    .map-overlay-track{
+      position:relative;
+      height:180px;
+      border-radius:8px;
+      background:#407c84;
+      border:3px solid #000;
+      margin-top:4px;
+      overflow:hidden;
+    }
+    .overlay-line{
+      position:absolute;
+      left:14px;right:14px;
+      height:2px;
+      background:#8bbe93;
+      opacity:0.75;
+    }
+    .overlay-marker{
+      position:absolute;
+      width:16px;height:16px;
+      border-radius:50%;
+      background:#ff5252;
+      border:3px solid #000;
+      transform:translate(0,0);
+      transition:transform .4s ease;
+    }
+    .overlay-node{
+      position:absolute;
+      width:10px;height:10px;
+      border-radius:50%;
+      border:2px solid #fff;
+      background:rgba(0,0,0,0.2);
+    }
+    .overlay-node.visited{
+      background:#ffeab5;
+    }
+    .overlay-footer{
+      font-size:9px;
+      margin-top:6px;
+    }
+    .overlay-close{
+      margin-top:8px;
+      padding:6px 10px;
+      background:#101e2b;
+      color:#fff;
+      border-radius:8px;
+      font-size:9px;
+      box-shadow:0 4px 0 rgba(0,0,0,0.7);
+    }
+
+    .menu-stack{
+      margin-top:2px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      width:100%;
+    }
+    .pixel-btn{
+      width:100%;
+      padding:8px 4px;
+      border-radius:8px;
+      font-size:9px;
+      color:#fff;
+      text-shadow:0 2px 0 rgba(0,0,0,0.6);
+      box-shadow:0 5px 0 rgba(0,0,0,0.75);
+    }
+    .btn-teal{background:#0c9a8d;}
+    .btn-green{background:#1c9f4e;}
+    .btn-red{background:#d93333;}
+    .btn-grey{background:#9c9c9c;}
+    .btn-yellow{background:#f4a623;}
+    .btn-blue{background:#2967d8;}
+    .btn-brown{background:#7a4d21;}
+
+    .bottom-buttons{
+      margin-top:auto;
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .modal{
+      position:fixed;
+      left:50%;top:50%;
+      transform:translate(-50%,-50%);
+      background:#ffffff;
+      border-radius:10px;
+      border:4px solid #000;
+      padding:20px 16px 14px;
+      max-width:90%;
+      width:420px;
+      max-height:90vh;
+      overflow-y:auto;
+      box-shadow:0 12px 40px rgba(0,0,0,0.75);
+      display:none;
+      z-index:60;
+      color:#111;
+    }
+    .modal.show{display:block;}
+    .modal h3{font-size:11px;margin-bottom:8px;}
+    .modal p,.modal li{font-size:10px;line-height:1.5;}
+    .modal ul{padding-left:18px;margin-top:4px;}
+    .modal .close{
+      margin-top:10px;
+      padding:6px 10px;
+      background:#101e2b;
+      color:#fff;
+      border-radius:8px;
+      font-size:9px;
+      box-shadow:0 4px 0 rgba(0,0,0,0.6);
+    }
+
+    .modal .course-select-btn{
+      display:block;
+      width:100%;
+      margin:4px 0;
+      padding:6px 8px;
+      font-size:9px;
+      background:#183a42;
+      color:#eaf7ff;
+      border-radius:6px;
+      box-shadow:0 3px 0 rgba(0,0,0,0.6);
+      text-align:left;
+    }
+
+    /* "X" button in top-right of modal */
+.modal-close-x{
+  position:absolute;
+  top:4px;
+  right:6px;
+  background:transparent;
+  border:none;
+  font-size:14px;
+  cursor:pointer;
+  padding:2px 4px;
+}
+.modal-close-x:active{
+  transform:translateY(1px);
+}
+
+    /* NEW: Stats results table */
+.stats-table {
+  width:100%;
+  border-collapse:collapse;
+  margin:8px 0;
+  font-size:9px;
+}
+.stats-table th {
+  background:#183a42;
+  color:#fff;
+  padding:6px 4px;
+  text-align:left;
+  border:2px solid #000;
+}
+.stats-table td {
+  padding:5px 4px;
+  border:2px solid #ddd;
+}
+.stats-table tr:nth-child(even) {
+  background:#f5f5f5;
+}
+.stats-table .passed {
+  color:#1c9f4e;
+  font-weight:bold;
+}
+.stats-table .failed {
+  color:#d93333;
+  font-weight:bold;
+}
+.stats-table .score-cell {
+  font-weight:bold;
+}
+.empty-stats {
+  text-align:center;
+  padding:20px;
+  color:#666;
+  font-style:italic;
+}
+
+    /* ADDED: Better stats table styling for modal */
+.modal .stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 9px;
+}
+
+.modal .stats-table th {
+  background: #183a42;
+  color: #fff;
+  padding: 6px 4px;
+  text-align: left;
+  border: 2px solid #000;
+}
+
+.modal .stats-table td {
+  padding: 5px 4px;
+  border: 2px solid #ddd;
+}
+
+.modal .stats-table tr:nth-child(even) {
+  background: #f5f5f5;
+}
+
+.modal .passed {
+  color: #1c9f4e;
+  font-weight: bold;
+}
+
+.modal .failed {
+  color: #d93333;
+  font-weight: bold;
+}
+
+.modal .score-cell {
+  font-weight: bold;
+}
+
+.modal .empty-stats {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+    @media (max-width:900px){
+      .game-shell{
+        grid-template-columns:1fr;
+        max-width:100%;
+      }
+      .center-panel{order:1;}
+      .left-panel{order:2;border-right:none;border-top:3px solid #101e2b;}
+      .right-panel{order:3;border-left:none;border-top:3px solid #101e2b;}
+      .screen{
+        max-width:100%;
+        height:300px;
+      }
+      .question-block{
+        height:130px;
+      }
+    }
+
+    @media (max-width:600px){
+      .game-shell{
+        margin:0;
+        border-radius:0;
+      }
+      .screen{
+        height:290px;
+      }
+      .hero-area{
+        height:180px;
+      }
+      .question-text{font-size:11px;}
+      .answers-text{font-size:10px;}
+      .chip{font-size:10px;}
+      .controls-row{
+        flex-direction:column;
+        align-items:center;
+        gap:8px;
+      }
+      .letter-pill{
+        width:54px;height:54px;
+        font-size:20px;
+      }
+      .activities-title{font-size:10px;}
+      .activity-sub,.activity-main,.activity-subheader{font-size:9px;}
+      .pixel-btn{font-size:10px;}
+      .map-card{font-size:9px;}
+    }
+  </style>
+</head>
+<body>
+<div class="game-shell">
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="left-top-icons">
+      <div class="square-icon" id="iconSearch" title="Search">🔍</div>
+      <div class="square-icon" id="iconMenu" title="Tips">☰</div>
+    </div>
+    <div class="lesson-search-wrap">
+  <input
+    type="text"
+    id="lessonSearch"
+    class="lesson-search"
+    placeholder="Search lessons..."
+  />
+</div>
+
+    <div class="course-language-label">
+      Language: <span class="course-name" id="currentCourseLabel">Java</span>
+    </div>
+    <div class="activities-title" id="lessonsTitle">Java Lessons</div>
+
+    <div class="activity-list" id="lessonList"></div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="center-panel">
+    <div class="screen">
+      <div class="screen-inner">
+        <div class="screen-top-row">
+          <div class="screen-top-left" id="screenTitle">
+            Select a lesson quiz on the left to begin. The timer will start automatically.
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <div class="chip" id="timerDisplay">--:--</div>
+            <div class="chip" id="heartsDisplay">♥ x5</div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text" id="questionText"></div>
+          <div class="answers-text" id="answersText"></div>
+        </div>
+
+        <div class="hero-area">
+          <div class="hero-extra-bmo"></div>
+          <div class="hero-finn">
+            <img id="finnSprite" src="finn1.png" alt="Finn">
+          </div>
+          <div class="hero-jake">
+            <img id="jakeSprite" src="jake1.png" alt="Jake">
+          </div>
+          <div class="hero-lich">
+            <img id="lichSprite" src="bmo-lich1.png" alt="BMO-Lich">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-row">
+      <div class="submit-column">
+        <button class="big-yellow" id="submitBtn" title="Submit answer"></button>
+        <div class="submit-label">SUBMIT</div>
+        <div class="fake-lights">
+          <div class="fake-light"></div>
+          <div class="fake-light"></div>
+        </div>
+      </div>
+
+      <div class="side-buttons">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <button class="round-btn small blue" id="hintBtn" title="Hint">
+            <div class="round-btn-icon">?</div>
+          </button>
+          <div class="btn-label">HINT</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <button class="round-btn small green" id="chooseBtn" title="Choose answer (cycle)">
+            <div class="round-btn-icon">▲</div>
+          </button>
+          <div class="btn-label">CHOOSE</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <!-- Music Button (replaces Next button) -->
+          <button class="round-btn purple" id="musicBtn" title="Toggle music">
+            <div class="round-btn-icon" id="musicIcon">♪</div>
+          </button>
+          <div class="btn-label">MUSIC</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <button class="round-btn red" id="resourcesBtn" title="Resources">
+            <div class="round-btn-icon">▢</div>
+          </button>
+          <div class="btn-label">RESOURCES</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="letter-grid">
+      <button class="letter-pill red" id="pillA">A</button>
+      <button class="letter-pill blue" id="pillB">B</button>
+      <button class="letter-pill orange" id="pillC">C</button>
+      <button class="letter-pill green" id="pillD">D</button>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <div class="map-card" id="mapCard" title="Tap to expand map">
+      <h3>ADVENTURE MAP</h3>
+      <div class="map-track" id="mapTrack">
+        <div class="map-line"></div>
+        <div class="map-line"></div>
+        <div class="map-line"></div>
+        <div class="map-line"></div>
+        <div class="map-line"></div>
+        <div class="map-marker" id="mapMarker"></div>
+      </div>
+      <div class="map-footer">
+        <div id="mapSetLabel">Set: none</div>
+        <div id="mapQuestionLabel">Question: 0 / 0</div>
+      </div>
+      <div class="avatar-row">
+        <div class="avatar-chip">GUEST</div>
+      </div>
+    </div>
+
+    <div class="menu-stack">
+      <button class="pixel-btn btn-teal" id="homeBtn">Home</button>
+      <button class="pixel-btn btn-green" id="continueBtn">Continue</button>
+      <button class="pixel-btn btn-red" id="newSaveBtn">New Save</button>
+      
+      <!-- UPDATED: Changed Stats button to open full stats view -->
+      <button class="pixel-btn btn-grey" id="viewStatsBtn">View All Stats</button>
+      
+      <button class="pixel-btn btn-yellow" id="leaderboardBtn">Leaderboard</button>
+
+      <button class="pixel-btn btn-teal" id="coursesBtn">Switch Course</button>
+      <button class="pixel-btn btn-teal" id="javaPageBtn">Go to Java Course Page</button>
+      <button class="pixel-btn btn-teal" id="htmlPageBtn">Go to HTML Course Page</button>
+      <button class="pixel-btn btn-teal" id="cssPageBtn">Go to CSS Course Page</button>
+      <button class="pixel-btn btn-teal" id="jsPageBtn">Go to JavaScript Course Page</button>
+      <button class="pixel-btn btn-teal" id="pythonPageBtn">Go to Python Course Page</button>
+    </div>
+
+    <div class="bottom-buttons">
+      <button class="pixel-btn btn-blue" id="settingsBtn">Settings</button>
+      <button class="pixel-btn btn-brown" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+</div>
+
+<div class="map-overlay" id="mapOverlay">
+  <div class="map-overlay-inner">
+    <h2>Adventure Map</h2>
+    <div class="map-overlay-track" id="overlayTrack">
+      <div class="overlay-line" style="top:30px;"></div>
+      <div class="overlay-line" style="top:70px;"></div>
+      <div class="overlay-line" style="top:110px;"></div>
+      <div class="overlay-line" style="top:150px;"></div>
+      <div class="overlay-marker" id="overlayMarker"></div>
+      <div id="overlayNodes"></div>
+    </div>
+    <div class="overlay-footer" id="overlayInfo"></div>
+    <button class="overlay-close" id="overlayClose">Close map</button>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <button class="modal-close-x" id="modalCloseX" aria-label="Close">✕</button>
+  <h3 id="modalTitle">Title</h3>
+  <div id="modalBody"></div>
+  <button class="close" id="modalClose">Close</button>
+</div>
+
+<script>
+/* =========================== CONFIG FOR ANALYTICS =========================== */
+const SECTION_CONFIG = {
+  A: "Section A — Fundamentals",
+  B: "Section B — Control Flow & Decision Making",
+  C: "Section C — Arrays & Collections",
+  D: "Section D — OOP Concepts",
+  E: "Section E — OOP Principles in Action",
+  F: "Section F — Performance, Execution & Memory",
+  G: "Section G — Logical, Critical & Decision-Making"
+};
+
+const PARAM_CONFIG = {
+  execution: {
+    label: "Execution",
+    tip: "Review how algorithm structure affects runtime. Practice tracing code and comparing efficient vs. inefficient approaches."
+  },
+  memory: {
+    label: "Memory usage",
+    tip: "Revisit arrays, collections, and scenarios that store many values. Ask: what is the smallest structure that still works?"
+  },
+  complexity: {
+    label: "Complexity analysis",
+    tip: "Refresh Big-O basics (O(1), O(n), O(log n)). Try to estimate how running time grows as input size increases."
+  },
+  latency: {
+    label: "Latency",
+    tip: "Think about delays: response time, waiting for I/O, and setup before execution. Connect this to user experience."
+  },
+  logic: {
+    label: "Logical thinking",
+    tip: "Focus on step-by-step reasoning. Draw simple flowcharts for conditions, loops, and control flow before coding."
+  },
+  critical: {
+    label: "Critical thinking",
+    tip: "When solving problems, compare options, question assumptions, and deliberately choose the most efficient or safest approach."
+  },
+  decision: {
+    label: "Decision making",
+    tip: "Practice choosing between if/switch, loops vs. recursion, and different data structures based on requirements."
+  }
+};
+
+/* =========================== PRE/POST TEST QUESTIONS (Q1–Q25, Sections A–G) =========================== */
+const PRE_POST_QUESTIONS = [
+  {
+    section: "A",
+    params: ["logic"],
+    q: "Which statement best defines a variable in programming?",
+    options: [
+      "A fixed value that never changes",
+      "A named memory location that stores data",
+      "A function that returns a value",
+      "A data type declaration"
+    ],
+    correct: 1,
+    hint: "Think: it's a container in memory that you can label and update."
+  },
+  {
+    section: "A",
+    params: ["memory"],
+    q: "What is the primary difference between int, float, and string data types?",
+    options: [
+      "Their memory address",
+      "Their execution speed",
+      "The kind of data they store",
+      "Their scope"
+    ],
+    correct: 2,
+    hint: "Some store numbers, some store text."
+  },
+  {
+    section: "A",
+    params: ["logic"],
+    q: "Which of the following correctly initializes a variable in most programming languages?",
+    options: [
+      "int x; = 10",
+      "x := int 10",
+      "int x = 10;",
+      "10 = x;"
+    ],
+    correct: 2,
+    hint: "Declaration → name → equals → value → semicolon."
+  },
+  {
+    section: "A",
+    params: ["memory"],
+    q: "Why is variable initialization important? (Select best answer)",
+    options: [
+      "It reduces file size",
+      "It prevents undefined or garbage values",
+      "It improves UI design",
+      "It increases execution latency"
+    ],
+    correct: 1,
+    hint: "Uninitialized variables can contain random junk."
+  },
+  {
+    section: "B",
+    params: ["logic"],
+    q: "What is control flow in a program?",
+    options: [
+      "How data is stored in memory",
+      "The order in which instructions are executed",
+      "The way variables are declared",
+      "How errors are handled"
+    ],
+    correct: 1,
+    hint: "It's about which line runs next."
+  },
+  {
+    section: "B",
+    params: ["logic", "decision"],
+    q: "Which control structure is best suited for executing code repeatedly while a condition is true?",
+    options: [
+      "if",
+      "switch",
+      "for / while",
+      "break"
+    ],
+    correct: 2,
+    hint: "You want a loop, not just a one-time check."
+  },
+  {
+    section: "B",
+    params: ["decision"],
+    q: "When should a switch statement be preferred over multiple if-else statements?",
+    options: [
+      "When conditions are complex ranges",
+      "When conditions are boolean",
+      "When comparing a single variable against fixed values",
+      "When memory usage is high"
+    ],
+    correct: 2,
+    hint: "Think: one variable, many discrete options."
+  },
+  {
+    section: "B",
+    params: ["decision"],
+    q: "Which of the following is a valid use of the ternary operator?",
+    options: [
+      "Looping through an array",
+      "Replacing complex nested loops",
+      "Making simple conditional assignments",
+      "Managing memory allocation"
+    ],
+    correct: 2,
+    hint: "It's basically a compact if-else that returns a value."
+  },
+  {
+    section: "B",
+    params: ["logic", "execution"],
+    q: "What is the output of this code?\n\nint x = 5;\nSystem.out.println(x > 3 ? \"Yes\" : \"No\");",
+    options: [
+      "No",
+      "Yes",
+      "Error",
+      "Undefined"
+    ],
+    correct: 1,
+    hint: "The condition x > 3 is true."
+  },
+  {
+    section: "C",
+    params: ["memory"],
+    q: "What is the main advantage of using an array over individual variables?",
+    options: [
+      "Faster execution",
+      "Lower memory usage",
+      "Ability to store multiple values of the same type",
+      "Better readability"
+    ],
+    correct: 2,
+    hint: "You can group a whole list of similar data."
+  },
+  {
+    section: "C",
+    params: ["memory"],
+    q: "Which data structure dynamically resizes and provides faster insertion/deletion than arrays?",
+    options: [
+      "Static Array",
+      "Linked List",
+      "Primitive Variable",
+      "Enum"
+    ],
+    correct: 1,
+    hint: "It's built from nodes that point to the next one."
+  },
+  {
+    section: "C",
+    params: ["complexity"],
+    q: "Accessing an element in an array by index typically has what time complexity?",
+    options: [
+      "O(n)",
+      "O(log n)",
+      "O(1)",
+      "O(n²)"
+    ],
+    correct: 2,
+    hint: "Random access is constant time."
+  },
+  {
+    section: "D",
+    params: ["logic"],
+    q: "Which of the following best defines Object-Oriented Programming?",
+    options: [
+      "Programming using only functions",
+      "Programming based on objects containing data and behavior",
+      "Programming focused on algorithms only",
+      "Programming without memory management"
+    ],
+    correct: 1,
+    hint: "Think: objects have fields (data) and methods (behavior)."
+  },
+  {
+    section: "D",
+    params: ["logic"],
+    q: "Which OOP concept is described as \"Restricting direct access to data\"?",
+    options: [
+      "Encapsulation",
+      "Inheritance",
+      "Polymorphism",
+      "Abstraction"
+    ],
+    correct: 0,
+    hint: "Private fields + getters/setters."
+  },
+  {
+    section: "D",
+    params: ["critical"],
+    q: "Why is encapsulation important in software design?",
+    options: [
+      "It increases execution speed",
+      "It improves security and maintainability",
+      "It reduces memory usage",
+      "It eliminates bugs"
+    ],
+    correct: 1,
+    hint: "It keeps data safe and code easier to change."
+  },
+  {
+    section: "E",
+    params: ["logic"],
+    q: "You are designing a Payment system with CreditCardPayment and CashPayment.\nWhich OOP principle allows treating them as the same type?",
+    options: [
+      "Encapsulation",
+      "Inheritance",
+      "Polymorphism",
+      "Abstraction"
+    ],
+    correct: 2,
+    hint: "Same interface, different concrete classes."
+  },
+  {
+    section: "E",
+    params: ["logic"],
+    q: "A class exposes only essential methods while hiding complex logic.\nWhich principle is applied?",
+    options: [
+      "Inheritance",
+      "Abstraction",
+      "Polymorphism",
+      "Overloading"
+    ],
+    correct: 1,
+    hint: "Show the \"what\", hide the \"how\"."
+  },
+  {
+    section: "F",
+    params: ["execution", "complexity"],
+    q: "Which factor most directly affects execution time of an algorithm?",
+    options: [
+      "Variable naming",
+      "Algorithm complexity",
+      "Code indentation",
+      "Comment length"
+    ],
+    correct: 1,
+    hint: "Big-O is your performance compass."
+  },
+  {
+    section: "F",
+    params: ["memory"],
+    q: "Which scenario uses more memory?",
+    options: [
+      "Storing 100 integers in an array",
+      "Storing 100 integers as separate variables",
+      "Using a loop to reuse one variable",
+      "Using constants"
+    ],
+    correct: 1,
+    hint: "All those separate variable declarations add up."
+  },
+  {
+    section: "F",
+    params: ["memory", "complexity"],
+    q: "If a program runs faster but consumes more memory, this is an example of:",
+    options: [
+      "Poor coding",
+      "Latency issue",
+      "Time–space tradeoff",
+      "Memory leak"
+    ],
+    correct: 2,
+    hint: "You're trading one resource for another."
+  },
+  {
+    section: "F",
+    params: ["latency"],
+    q: "Which best describes latency?",
+    options: [
+      "Total program size",
+      "Delay before execution starts",
+      "Number of variables used",
+      "Memory allocation size"
+    ],
+    correct: 1,
+    hint: "Think of the \"wait\" before you see a response."
+  },
+  {
+    section: "G",
+    params: ["decision", "complexity"],
+    q: "You must choose between a for loop and recursion.\nWhich factor should MOST influence your decision?",
+    options: [
+      "Code length",
+      "Readability and stack memory usage",
+      "Variable scope",
+      "Output formatting"
+    ],
+    correct: 1,
+    hint: "Consider clarity and risk of stack overflow."
+  },
+  {
+    section: "G",
+    params: ["decision", "complexity"],
+    q: "A system must handle thousands of user requests efficiently.\nWhich data structure is the best initial choice?",
+    options: [
+      "Array",
+      "Stack",
+      "Queue",
+      "Collection with optimized search (e.g., HashMap)"
+    ],
+    correct: 3,
+    hint: "Fast lookups under heavy load are key."
+  },
+  {
+    section: "G",
+    params: ["decision"],
+    q: "Why might a developer replace nested if-else statements with a switch?",
+    options: [
+      "To increase latency",
+      "To reduce readability",
+      "To improve clarity and decision efficiency",
+      "To consume more memory"
+    ],
+    correct: 2,
+    hint: "Cleaner branching usually reads better."
+  },
+  {
+    section: "G",
+    params: ["critical"],
+    q: "Which approach demonstrates critical thinking in programming?",
+    options: [
+      "Copying code from the internet",
+      "Choosing the first solution that works",
+      "Evaluating multiple solutions based on complexity and performance",
+      "Avoiding refactoring"
+    ],
+    correct: 2,
+    hint: "You're not just solving it—you're choosing the best solution."
+  }
+];
+
+/* =========================== QUESTION SETS (JAVA) =========================== */
+const JAVA_QUESTION_SETS = {
+  "lesson1": {
+    label: "Lesson 1 — Variables in Java",
+    questions: [
+      {
+        q: "What are the three main components of a variable in Java?",
+        options: [
+          "Scope, lifetime, and class",
+          "Type, name, and value",
+          "Declaration, initialization, and output",
+          "Keyword, identifier, and operator"
+        ],
+        correct: 1,
+        hint: "Think about what every variable must have: its kind, its label, and what it stores."
+      },
+      {
+        q: "Which of the following is a valid variable declaration in Java?",
+        options: [
+          "boolean = true;",
+          "double total cost = 49.99;",
+          "int 2score = 100;",
+          "String playerName = \"Quizventurer\";"
+        ],
+        correct: 3,
+        hint: "Variable names can't start with numbers or contain spaces."
+      },
+      {
+        q: "What happens if you try to use a variable before declaring it in Java?",
+        options: [
+          "It automatically initializes to zero",
+          "It causes a compile-time error",
+          "It prints null by default",
+          "It creates a temporary variable"
+        ],
+        correct: 1,
+        hint: "Java requires explicit declaration. Using a variable before declaring it causes an error."
+      },
+      {
+        q: "Which naming convention is recommended for variables in Java?",
+        options: [
+          "PascalCase",
+          "ALL_CAPS",
+          "snake_case",
+          "camelCase"
+        ],
+        correct: 3,
+        hint: "Example: userScore, totalCost, playerName."
+      },
+      {
+        q: "What is the difference between declaration and initialization of a variable?",
+        options: [
+          "Declaration and initialization are the same",
+          "Declaration assigns a value, initialization defines the type",
+          "Declaration is optional, initialization is mandatory",
+          "Declaration defines type and name, initialization assigns a value"
+        ],
+        correct: 3,
+        hint: "First you introduce the variable, then you give it a value."
+      }
+    ]
+  },
+  "lesson2": {
+    label: "Lesson 2 — Data Types in Java",
+    questions: [
+      {
+        q: "How many primitive data types does Java have?",
+        options: [
+          "6",
+          "8",
+          "10",
+          "12"
+        ],
+        correct: 1,
+        hint: "byte, short, int, long, float, double, char, boolean."
+      },
+      {
+        q: "Which of the following is NOT a primitive data type in Java?",
+        options: [
+          "int",
+          "double",
+          "String",
+          "boolean"
+        ],
+        correct: 2,
+        hint: "This one is a reference type used very often for text."
+      },
+      {
+        q: "What is the default value of an uninitialized boolean variable in Java (when it's a class field)?",
+        options: [
+          "true",
+          "false",
+          "null",
+          "0"
+        ],
+        correct: 1,
+        hint: "Think of the \"off\" state."
+      },
+      {
+        q: "Which suffix must be used when declaring a long literal in Java?",
+        options: [
+          "L",
+          "f",
+          "d",
+          "l"
+        ],
+        correct: 0,
+        hint: "Uppercase is preferred for readability."
+      },
+      {
+        q: "What is the key difference between primitive and non-primitive data types in Java?",
+        options: [
+          "Primitives store references, non-primitives store values",
+          "Primitives are faster and store values directly, non-primitives store references",
+          "Non-primitives are built-in, primitives are user-defined",
+          "Non-primitives cannot be used in arrays"
+        ],
+        correct: 1,
+        hint: "Primitives are stored by value; objects are handled via references."
+      }
+    ]
+  },
+  "lesson3": {
+    label: "Lesson 3 — Declaring & Initializing Variables",
+    questions: [
+      {
+        q: "What does declaring a variable in Java do?",
+        options: [
+          "Assigns a value to the variable",
+          "Reserves memory and defines type & name",
+          "Prints the variable to the console",
+          "Automatically initializes the variable"
+        ],
+        correct: 1,
+        hint: "You're introducing the variable to the compiler and reserving space."
+      },
+      {
+        q: "Which of the following is a valid combined declaration and initialization?",
+        options: [
+          "int count; count = 10;",
+          "double price = 99.99;",
+          "String = \"Game\";",
+          "boolean true = flag;"
+        ],
+        correct: 1,
+        hint: "Type, variable name, equals, and value—all in one line."
+      },
+      {
+        q: "What happens if you use a local variable before initializing it?",
+        options: [
+          "It defaults to 0",
+          "It defaults to null",
+          "It causes a compile-time error",
+          "It automatically initializes to false"
+        ],
+        correct: 2,
+        hint: "Local variables get no default values from Java."
+      },
+      {
+        q: "Which of the following statements about default values is correct?",
+        options: [
+          "Local variables default to 0",
+          "Instance variables default to type-specific values",
+          "All variables default to null",
+          "Java automatically initializes all variables"
+        ],
+        correct: 1,
+        hint: "Fields in a class do get default values; locals do not."
+      },
+      {
+        q: "What is a best practice when declaring and initializing variables in Java?",
+        options: [
+          "Use short names like x or temp",
+          "Declare all variables at the top of the class",
+          "Declare variables close to where they're used and initialize immediately",
+          "Avoid initializing variables until the end of the program"
+        ],
+        correct: 2,
+        hint: "Keep scopes tight and names meaningful for clarity."
+      }
+    ]
+  },
+  "lesson4": {
+    label: "Lesson 4 — Control Flow",
+    questions: [
+      {
+        q: "What is the main purpose of control flow in a program?",
+        options: [
+          "To store data in memory",
+          "To decide the order of execution",
+          "To declare variables",
+          "To compile the program"
+        ],
+        correct: 1,
+        hint: "It's all about what runs next and under what condition."
+      },
+      {
+        q: "Which statement ensures that code executes only if a condition is true?",
+        options: [
+          "switch",
+          "for",
+          "if",
+          "do-while"
+        ],
+        correct: 2,
+        hint: "This is the most basic conditional in Java."
+      },
+      {
+        q: "Which loop guarantees at least one execution of its body, even if the condition is false?",
+        options: [
+          "for",
+          "while",
+          "do-while",
+          "switch"
+        ],
+        correct: 2,
+        hint: "The condition is checked after the first run."
+      },
+      {
+        q: "Which control flow structure is best for handling multiple fixed values of a variable?",
+        options: [
+          "if-else",
+          "switch",
+          "while",
+          "for"
+        ],
+        correct: 1,
+        hint: "Great when you're branching on one variable with known options."
+      },
+      {
+        q: "What common mistake can occur when using loops?",
+        options: [
+          "Forgetting to declare variables",
+          "Using descriptive names",
+          "Creating infinite loops",
+          "Combining conditionals and loops"
+        ],
+        correct: 2,
+        hint: "It happens when the exit condition is never met."
+      }
+    ]
+  },
+  "lesson5": {
+    label: "Lesson 5 — Conditional Statements",
+    questions: [
+      {
+        q: "What does an if statement do in Java?",
+        options: [
+          "Declares a variable",
+          "Executes code only if a condition is true",
+          "Loops through a block of code",
+          "Switches between multiple values"
+        ],
+        correct: 1,
+        hint: "It only runs its block when its boolean expression is true."
+      },
+      {
+        q: "Which operator checks if both conditions are true?",
+        options: [
+          "||",
+          "&&",
+          "!",
+          "=="
+        ],
+        correct: 1,
+        hint: "Logical AND: both sides must be true."
+      },
+      {
+        q: "What is the purpose of an else block?",
+        options: [
+          "To run code when the condition is true",
+          "To run code when the condition is false",
+          "To declare multiple variables",
+          "To negate a condition"
+        ],
+        correct: 1,
+        hint: "Think of it as the \"otherwise\" branch."
+      },
+      {
+        q: "Which of the following correctly demonstrates a nested conditional?",
+        options: [
+          "if (score >= 60) {\n if (bonus) {\n System.out.println(\"Bonus points awarded!\");\n }\n}",
+          "if (score >= 60) else (bonus) { ... }",
+          "if (score >= 60 && bonus) { ... }",
+          "if (score >= 60) { ... } else if (bonus) { ... }"
+        ],
+        correct: 0,
+        hint: "Nested means an if statement inside another if block."
+      },
+      {
+        q: "What common mistake should you avoid when writing conditional statements?",
+        options: [
+          "Using curly braces",
+          "Testing edge cases",
+          "Dangling else without braces",
+          "Combining conditionals with loops"
+        ],
+        correct: 2,
+        hint: "Always use braces to avoid ambiguity with else."
+      }
+    ]
+  },
+  "lesson6": {
+    label: "Lesson 6 — Switch and Ternary Operator",
+    questions: [
+      {
+        q: "What is the main advantage of using a switch statement over multiple if-else chains?",
+        options: [
+          "It allows declaring variables",
+          "It improves readability and efficiency",
+          "It automatically initializes values",
+          "It works only with booleans"
+        ],
+        correct: 1,
+        hint: "switch shines when you have many fixed options."
+      },
+      {
+        q: "Which data types are supported in Java switch statements (Java 7+)?",
+        options: [
+          "int, char, String, enums",
+          "double, float, boolean",
+          "arrays and objects",
+          "only int"
+        ],
+        correct: 0,
+        hint: "You can switch on several discrete types, including enums."
+      },
+      {
+        q: "What happens if you forget to include break in a switch case?",
+        options: [
+          "The program stops immediately",
+          "It causes a compile-time error",
+          "Execution \"falls through\" to the next case",
+          "The default case runs automatically"
+        ],
+        correct: 2,
+        hint: "Control keeps going into the next case block."
+      },
+      {
+        q: "Which of the following correctly uses the ternary operator?",
+        options: [
+          "result = score >= 60 ? \"Pass\" : \"Fail\";",
+          "result = score >= 60 : \"Pass\" ? \"Fail\";",
+          "result = (score >= 60) if \"Pass\" else \"Fail\";",
+          "result = ? score >= 60 : \"Pass\" : \"Fail\";"
+        ],
+        correct: 0,
+        hint: "Format: condition ? valueIfTrue : valueIfFalse."
+      },
+      {
+        q: "When should you prefer the ternary operator over if-else?",
+        options: [
+          "For complex nested conditions",
+          "For quick assignments with simple conditions",
+          "For handling multiple fixed values",
+          "For looping through arrays"
+        ],
+        correct: 1,
+        hint: "Use it when you're just choosing a value, not running big blocks of code."
+      }
+    ]
+  },
+  "lesson7": {
+    label: "Lesson 7 — OOP Concepts",
+    questions: [
+      {
+        q: "What are the four main pillars of OOP in Java?",
+        options: [
+          "Classes, objects, loops, arrays",
+          "Encapsulation, inheritance, polymorphism, abstraction",
+          "Methods, variables, constructors, exceptions",
+          "Input, output, storage, retrieval"
+        ],
+        correct: 1,
+        hint: "These four concepts define object-oriented design."
+      },
+      {
+        q: "What is encapsulation in Java?",
+        options: [
+          "Reusing code from parent classes",
+          "Hiding data using private fields and public methods",
+          "Allowing one interface with many forms",
+          "Focusing only on essential details"
+        ],
+        correct: 1,
+        hint: "Think \"data hiding\" with getters and setters."
+      },
+      {
+        q: "Which OOP principle allows a subclass to reuse code from a parent class?",
+        options: [
+          "Polymorphism",
+          "Inheritance",
+          "Abstraction",
+          "Encapsulation"
+        ],
+        correct: 1,
+        hint: "Child extends Parent."
+      },
+      {
+        q: "What does polymorphism mean in Java?",
+        options: [
+          "One interface, many forms",
+          "Hiding complexity with abstract classes",
+          "Creating multiple objects from one class",
+          "Using private fields for security"
+        ],
+        correct: 0,
+        hint: "The same method name can behave differently for different objects."
+      },
+      {
+        q: "Which OOP principle focuses on hiding complexity and showing only essential features?",
+        options: [
+          "Encapsulation",
+          "Abstraction",
+          "Inheritance",
+          "Polymorphism"
+        ],
+        correct: 1,
+        hint: "Think abstract classes and interfaces exposing only what matters."
+      }
+    ]
+  },
+  "lesson8": {
+    label: "Lesson 8 — OOP Principles in Action",
+    questions: [
+      {
+        q: "What does a class represent in Java OOP?",
+        options: [
+          "A single object instance",
+          "A blueprint for creating objects",
+          "A method for hiding data",
+          "A loop for repeating actions"
+        ],
+        correct: 1,
+        hint: "Objects are created from classes."
+      },
+      {
+        q: "Which OOP principle allows a subclass to inherit properties and methods from a parent class?",
+        options: [
+          "Encapsulation",
+          "Polymorphism",
+          "Inheritance",
+          "Abstraction"
+        ],
+        correct: 2,
+        hint: "Used with the extends keyword."
+      },
+      {
+        q: "In the example, why can myPet.eat() be called but not myPet.bark() when myPet is declared as Animal myPet = new Dog();?",
+        options: [
+          "Because eat() is private",
+          "Because bark() is not defined in Animal",
+          "Because Dog cannot inherit from Animal",
+          "Because polymorphism disables method calls"
+        ],
+        correct: 1,
+        hint: "The reference type controls which methods are visible."
+      },
+      {
+        q: "What does polymorphism allow in Java?",
+        options: [
+          "Multiple classes with the same name",
+          "Treating subclasses as their parent type",
+          "Hiding data with private fields",
+          "Creating multiple objects from one class"
+        ],
+        correct: 1,
+        hint: "You can pass a Dog where an Animal is expected."
+      },
+      {
+        q: "Which of the following is a common pitfall in OOP design?",
+        options: [
+          "Using super() in constructors",
+          "Deep inheritance hierarchies",
+          "Creating multiple objects",
+          "Using encapsulation"
+        ],
+        correct: 1,
+        hint: "Too many levels of inheritance make code harder to maintain."
+      }
+    ]
+  },
+  "lesson9": {
+    label: "Lesson 9 — Arrays & Collection",
+    questions: [
+      {
+        q: "What is the key difference between arrays and ArrayLists in Java?",
+        options: [
+          "Arrays can store mixed types, ArrayLists cannot",
+          "Arrays are fixed-size, ArrayLists are dynamic",
+          "Arrays are slower, ArrayLists are faster",
+          "Arrays are part of java.util, ArrayLists are not"
+        ],
+        correct: 1,
+        hint: "One is fixed-length; the other can grow and shrink."
+      },
+      {
+        q: "How do you access the first element of an array called numbers?",
+        options: [
+          "numbers.get(0)",
+          "numbers[0]",
+          "numbers.first()",
+          "numbers(0)"
+        ],
+        correct: 1,
+        hint: "Array indexing starts at 0 with square brackets."
+      },
+      {
+        q: "Which method is used to add an element to an ArrayList?",
+        options: [
+          "insert()",
+          "push()",
+          "add()",
+          "append()"
+        ],
+        correct: 2,
+        hint: "This method is used all the time with ArrayList."
+      },
+      {
+        q: "What exception occurs if you try to access an index beyond an array's length?",
+        options: [
+          "NullPointerException",
+          "ArrayIndexOutOfBoundsException",
+          "IllegalArgumentException",
+          "IndexMismatchException"
+        ],
+        correct: 1,
+        hint: "It literally says you went out of bounds."
+      },
+      {
+        q: "Which loop is best for iterating through all elements of an array or ArrayList?",
+        options: [
+          "while loop",
+          "do-while loop",
+          "for-each loop",
+          "switch statement"
+        ],
+        correct: 2,
+        hint: "for (Type item : collection) { ... }"
+      }
+    ]
+  },
+  "pre-test": {
+    label: "Pre-Test — Fundamentals, OOP & Problem Solving",
+    questions: PRE_POST_QUESTIONS
+  },
+  "final-boss": {
+    label: "Final Boss — Java Post Test",
+    questions: PRE_POST_QUESTIONS
+  }
+};
+
+/* =========================== OTHER COURSES =========================== */
+const HTML_QUESTION_SETS = {
+  "lesson1": {
+    label: "Lesson 1 — HTML Basics",
+    questions: [
+      {
+        q: "What does HTML stand for?",
+        options: [
+          "Hyperlinks and Text Markup Language",
+          "Hyper Text Markup Language",
+          "Home Tool Markup Language",
+          "Hyper Tag Markup Language"
+        ],
+        correct: 1,
+        hint: "It's the standard markup for web pages."
+      },
+      {
+        q: "Which tag is used to create a hyperlink?",
+        options: [
+          "<link>",
+          "<a>",
+          "<href>",
+          "<url>"
+        ],
+        correct: 1,
+        hint: "It uses the href attribute."
+      }
+    ]
+  },
+  "lesson2": {
+    label: "Lesson 2 — HTML Structure",
+    questions: [
+      {
+        q: "Which tag wraps the main visible content of the page?",
+        options: [
+          "<head>",
+          "<html>",
+          "<body>",
+          "<main>"
+        ],
+        correct: 2,
+        hint: "Everything you see goes inside it."
+      },
+      {
+        q: "Which tag defines the title shown in the browser tab?",
+        options: [
+          "<title>",
+          "<header>",
+          "<h1>",
+          "<meta>"
+        ],
+        correct: 0,
+        hint: "It lives inside <head>."
+      }
+    ]
+  },
+  "lesson3": {
+    label: "Lesson 3 — Text & Lists",
+    questions: [
+      {
+        q: "Which tag is used for an ordered list?",
+        options: [
+          "<ul>",
+          "<li>",
+          "<ol>",
+          "<list>"
+        ],
+        correct: 2,
+        hint: "Think 'ordered list'."
+      },
+      {
+        q: "Which tag creates a top-level heading?",
+        options: [
+          "<h6>",
+          "<h1>",
+          "<p>",
+          "<title>"
+        ],
+        correct: 1,
+        hint: "Highest heading level."
+      }
+    ]
+  },
+  "lesson4": {
+    label: "Lesson 4 — Links & Images",
+    questions: [
+      {
+        q: "Which attribute is used on <a> to define the link destination?",
+        options: [
+          "src",
+          "link",
+          "href",
+          "url"
+        ],
+        correct: 2,
+        hint: "Hypertext REFerence."
+      },
+      {
+        q: "Which tag displays an image?",
+        options: [
+          "<picture>",
+          "<img>",
+          "<image>",
+          "<media>"
+        ],
+        correct: 1,
+        hint: "Self-closing tag with src attribute."
+      }
+    ]
+  },
+  "lesson5": {
+    label: "Lesson 5 — Tables",
+    questions: [
+      {
+        q: "Which tag starts a table?",
+        options: [
+          "<tbl>",
+          "<table>",
+          "<tab>",
+          "<tr>"
+        ],
+        correct: 1,
+        hint: "Think of the word 'table' itself."
+      },
+      {
+        q: "Which tag defines a table row?",
+        options: [
+          "<tr>",
+          "<td>",
+          "<th>",
+          "<row>"
+        ],
+        correct: 0,
+        hint: "Row = 'table row'."
+      }
+    ]
+  },
+  "lesson6": {
+    label: "Lesson 6 — Forms",
+    questions: [
+      {
+        q: "Which tag wraps form controls that are sent to the server?",
+        options: [
+          "<input>",
+          "<form>",
+          "<label>",
+          "<field>"
+        ],
+        correct: 1,
+        hint: "The whole form lives inside it."
+      },
+      {
+        q: "Which attribute on <form> specifies where to send the data?",
+        options: [
+          "href",
+          "action",
+          "target",
+          "method"
+        ],
+        correct: 1,
+        hint: "The URL or endpoint."
+      }
+    ]
+  },
+  "lesson7": {
+    label: "Lesson 7 — Semantic HTML",
+    questions: [
+      {
+        q: "Which tag is best for a site-wide navigation menu?",
+        options: [
+          "<nav>",
+          "<menu>",
+          "<header>",
+          "<section>"
+        ],
+        correct: 0,
+        hint: "Named exactly for navigation."
+      },
+      {
+        q: "Which is a semantic tag for standalone content like a blog post?",
+        options: [
+          "<div>",
+          "<article>",
+          "<span>",
+          "<strong>"
+        ],
+        correct: 1,
+        hint: "Represents a complete, independent piece."
+      }
+    ]
+  },
+  "lesson8": {
+    label: "Lesson 8 — Media & Embeds",
+    questions: [
+      {
+        q: "Which tag is used to embed a video file?",
+        options: [
+          "<video>",
+          "<movie>",
+          "<media>",
+          "<clip>"
+        ],
+        correct: 0,
+        hint: "HTML5 element with controls attribute."
+      },
+      {
+        q: "Which element embeds another HTML page inside the current one?",
+        options: [
+          "<frame>",
+          "<iframe>",
+          "<include>",
+          "<import>"
+        ],
+        correct: 1,
+        hint: "Inline frame."
+      }
+    ]
+  },
+  "lesson9": {
+    label: "Lesson 9 — Accessibility & Best Practices",
+    questions: [
+      {
+        q: "Which attribute provides text alternatives for images?",
+        options: [
+          "title",
+          "alt",
+          "desc",
+          "aria-label"
+        ],
+        correct: 1,
+        hint: "Screen readers rely on this."
+      },
+      {
+        q: "Which HTML snippet correctly sets the page language to English?",
+        options: [
+          "<html lang=\"en\">",
+          "<html language=\"en\">",
+          "<html xml-lang=\"en\">",
+          "<html locale=\"en\">"
+        ],
+        correct: 0,
+        hint: "Short and standard."
+      }
+    ]
+  }
+};
+
+const CSS_QUESTION_SETS = {
+  "lesson1": {
+    label: "Lesson 1 — CSS Basics",
+    questions: [
+      {
+        q: "What does CSS stand for?",
+        options: [
+          "Cascading Style Sheets",
+          "Computer Styled Sections",
+          "Creative Style System",
+          "Colorful Style Syntax"
+        ],
+        correct: 0,
+        hint: "It controls how HTML is presented."
+      },
+      {
+        q: "Which symbol is used to select a class in CSS?",
+        options: [
+          "#",
+          ".",
+          "@",
+          "%"
+        ],
+        correct: 1,
+        hint: "Think of dot notation."
+      }
+    ]
+  },
+  "lesson2": {
+    label: "Lesson 2 — Colors & Text",
+    questions: [
+      {
+        q: "Which property changes the text color?",
+        options: [
+          "background-color",
+          "font-style",
+          "color",
+          "text-align"
+        ],
+        correct: 2,
+        hint: "Same word you use in design tools."
+      },
+      {
+        q: "Which property makes text bold?",
+        options: [
+          "font-weight",
+          "font-bold",
+          "text-style",
+          "font-thick"
+        ],
+        correct: 0,
+        hint: "Weight of the font."
+      }
+    ]
+  },
+  "lesson3": {
+    label: "Lesson 3 — Box Model",
+    questions: [
+      {
+        q: "Which property controls the space inside a box, between the content and its border?",
+        options: [
+          "margin",
+          "padding",
+          "border-spacing",
+          "gap"
+        ],
+        correct: 1,
+        hint: "Think 'padding' like cushion inside."
+      },
+      {
+        q: "Which property adds space outside the border of an element?",
+        options: [
+          "margin",
+          "padding",
+          "outline",
+          "spacing"
+        ],
+        correct: 0,
+        hint: "Separates elements from each other."
+      }
+    ]
+  },
+  "lesson4": {
+    label: "Lesson 4 — Layout & Display",
+    questions: [
+      {
+        q: "Which display value turns a container into a flexbox?",
+        options: [
+          "block",
+          "inline",
+          "flex",
+          "grid"
+        ],
+        correct: 2,
+        hint: "Used with justify-content and align-items."
+      },
+      {
+        q: "Which property horizontally centers flex items (main axis)?",
+        options: [
+          "align-items",
+          "justify-content",
+          "text-align",
+          "flex-center"
+        ],
+        correct: 1,
+        hint: "Justify for main axis alignment."
+      }
+    ]
+  },
+  "lesson5": {
+    label: "Lesson 5 — Flexbox Basics",
+    questions: [
+      {
+        q: "Which property sets the direction of flex items?",
+        options: [
+          "flex-order",
+          "flex-direction",
+          "direction",
+          "align-direction"
+        ],
+        correct: 1,
+        hint: "Row vs column."
+      },
+      {
+        q: "What is the default flex-direction?",
+        options: [
+          "column",
+          "row",
+          "row-reverse",
+          "none"
+        ],
+        correct: 1,
+        hint: "Items line up from left to right by default."
+      }
+    ]
+  },
+  "lesson6": {
+    label: "Lesson 6 — Positioning",
+    questions: [
+      {
+        q: "Which value makes an element positioned relative to the viewport?",
+        options: [
+          "relative",
+          "fixed",
+          "absolute",
+          "sticky"
+        ],
+        correct: 1,
+        hint: "Stays in place even when scrolling."
+      },
+      {
+        q: "Which property controls stacking order?",
+        options: [
+          "order",
+          "z-index",
+          "stack-index",
+          "layer"
+        ],
+        correct: 1,
+        hint: "Higher value appears on top."
+      }
+    ]
+  },
+  "lesson7": {
+    label: "Lesson 7 — Responsive Design",
+    questions: [
+      {
+        q: "Which at-rule starts a media query?",
+        options: [
+          "@font-face",
+          "@import",
+          "@media",
+          "@screen"
+        ],
+        correct: 2,
+        hint: "Used for responsive breakpoints."
+      },
+      {
+        q: "Which unit scales with the width of the viewport?",
+        options: [
+          "px",
+          "em",
+          "rem",
+          "vw"
+        ],
+        correct: 3,
+        hint: "Viewport width based."
+      }
+    ]
+  },
+  "lesson8": {
+    label: "Lesson 8 — Transitions & Animations",
+    questions: [
+      {
+        q: "Which property defines how long a transition takes?",
+        options: [
+          "transition-delay",
+          "transition-duration",
+          "animation-time",
+          "duration"
+        ],
+        correct: 1,
+        hint: "Usually written in seconds or ms."
+      },
+      {
+        q: "Which at-rule defines keyframes for an animation?",
+        options: [
+          "@keyframes",
+          "@frames",
+          "@animate",
+          "@steps"
+        ],
+        correct: 0,
+        hint: "You already used it in this project 😉"
+      }
+    ]
+  },
+  "lesson9": {
+    label: "Lesson 9 — Best Practices",
+    questions: [
+      {
+        q: "Which selector is usually more reusable and preferred for styling?",
+        options: [
+          "ID selectors (#id)",
+          "Inline styles",
+          "Class selectors (.class)",
+          "Universal selector (*)"
+        ],
+        correct: 2,
+        hint: "Use them to style multiple elements."
+      },
+      {
+        q: "What's a good way to avoid style conflicts?",
+        options: [
+          "Use !important everywhere",
+          "Use very long selectors",
+          "Use clear naming conventions like BEM",
+          "Only use inline styles"
+        ],
+        correct: 2,
+        hint: "Helps keep CSS predictable and modular."
+      }
+    ]
+  }
+};
+
+const JS_QUESTION_SETS = {
+  "lesson1": {
+    label: "Lesson 1 — JS Basics",
+    questions: [
+      {
+        q: "Which keyword declares a block-scoped variable?",
+        options: [
+          "var",
+          "let",
+          "const",
+          "both let and const"
+        ],
+        correct: 3,
+        hint: "Modern JS prefers these."
+      },
+      {
+        q: "Which symbol is used for strict equality?",
+        options: [
+          "==",
+          "===",
+          "=",
+          "!=="
+        ],
+        correct: 1,
+        hint: "Three equals checks value + type."
+      }
+    ]
+  },
+  "lesson2": {
+    label: "Lesson 2 — Data & Types",
+    questions: [
+      {
+        q: "What is the output of: console.log(typeof 42);",
+        options: [
+          "\"int\"",
+          "\"number\"",
+          "\"float\"",
+          "\"numeric\""
+        ],
+        correct: 1,
+        hint: "JS has one numeric type."
+      },
+      {
+        q: "Which is NOT a JavaScript primitive?",
+        options: [
+          "number",
+          "string",
+          "object",
+          "boolean"
+        ],
+        correct: 2,
+        hint: "This one can hold many things."
+      }
+    ]
+  },
+  "lesson3": {
+    label: "Lesson 3 — Operators & Control Flow",
+    questions: [
+      {
+        q: "Which operator is used for logical AND?",
+        options: [
+          "&&",
+          "||",
+          "&",
+          "and"
+        ],
+        correct: 0,
+        hint: "Two ampersands."
+      },
+      {
+        q: "Which keyword starts a conditional block?",
+        options: [
+          "if",
+          "when",
+          "case",
+          "then"
+        ],
+        correct: 0,
+        hint: "It pairs with else."
+      }
+    ]
+  },
+  "lesson4": {
+    label: "Lesson 4 — Functions",
+    questions: [
+      {
+        q: "Which is a correct function declaration?",
+        options: [
+          "function = myFunc() {}",
+          "function myFunc() {}",
+          "myFunc function() {}",
+          "func myFunc() {}"
+        ],
+        correct: 1,
+        hint: "Keyword, name, parentheses, braces."
+      },
+      {
+        q: "What does a function return if there is no return statement?",
+        options: [
+          "0",
+          "null",
+          "undefined",
+          "NaN"
+        ],
+        correct: 2,
+        hint: "The default non-value in JS."
+      }
+    ]
+  },
+  "lesson5": {
+    label: "Lesson 5 — Arrays",
+    questions: [
+      {
+        q: "Which method adds an element to the end of an array?",
+        options: [
+          "push()",
+          "pop()",
+          "shift()",
+          "unshift()"
+        ],
+        correct: 0,
+        hint: "It 'pushes' onto the end."
+      },
+      {
+        q: "What is the index of the first element in an array?",
+        options: [
+          "0",
+          "1",
+          "-1",
+          "It depends"
+        ],
+        correct: 0,
+        hint: "Zero-based indexing."
+      }
+    ]
+  },
+  "lesson6": {
+    label: "Lesson 6 — Objects",
+    questions: [
+      {
+        q: "Which syntax correctly accesses the 'name' property on object user?",
+        options: [
+          "user(name)",
+          "user->name",
+          "user.name",
+          "user::name"
+        ],
+        correct: 2,
+        hint: "Dot notation."
+      },
+      {
+        q: "Which of the following creates an empty object?",
+        options: [
+          "let obj = [];",
+          "let obj = {};",
+          "let obj = object();",
+          "let obj = new Array();"
+        ],
+        correct: 1,
+        hint: "Literal with curly braces."
+      }
+    ]
+  },
+  "lesson7": {
+    label: "Lesson 7 — DOM Basics",
+    questions: [
+      {
+        q: "Which method selects the first element that matches a CSS selector?",
+        options: [
+          "document.getElementById()",
+          "document.querySelector()",
+          "document.select()",
+          "document.find()"
+        ],
+        correct: 1,
+        hint: "Works with any CSS selector."
+      },
+      {
+        q: "Which property changes the text inside an element?",
+        options: [
+          "innerHTML",
+          "textContent",
+          "innerText",
+          "value"
+        ],
+        correct: 1,
+        hint: "Safer for pure text."
+      }
+    ]
+  },
+  "lesson8": {
+    label: "Lesson 8 — Events",
+    questions: [
+      {
+        q: "Which method attaches an event listener to an element?",
+        options: [
+          "onEvent()",
+          "listen()",
+          "addEventListener()",
+          "attach()"
+        ],
+        correct: 2,
+        hint: "The long but standard one."
+      },
+      {
+        q: "Which event fires when a user clicks a button?",
+        options: [
+          "input",
+          "change",
+          "click",
+          "press"
+        ],
+        correct: 2,
+        hint: "You've seen it a thousand times."
+      }
+    ]
+  },
+  "lesson9": {
+    label: "Lesson 9 — Debugging & Console",
+    questions: [
+      {
+        q: "Which method logs messages to the browser console?",
+        options: [
+          "log()",
+          "console()",
+          "console.log()",
+          "alert()"
+        ],
+        correct: 2,
+        hint: "The classic debugging tool."
+      },
+      {
+        q: "Where do you typically see console.log output?",
+        options: [
+          "In the HTML page itself",
+          "In the browser DevTools console",
+          "In a popup alert",
+          "In the URL bar"
+        ],
+        correct: 1,
+        hint: "Open DevTools → Console."
+      }
+    ]
+  }
+};
+
+const PYTHON_QUESTION_SETS = {
+  "lesson1": {
+    label: "Lesson 1 — Python Basics",
+    questions: [
+      {
+        q: "Which of the following is valid Python code to print 'Hello'?",
+        options: [
+          "print \"Hello\"",
+          "echo('Hello')",
+          "print('Hello')",
+          "System.out.println('Hello')"
+        ],
+        correct: 2,
+        hint: "No echo, no System.out here."
+      },
+      {
+        q: "Which symbol starts a comment in Python?",
+        options: [
+          "//",
+          "#",
+          "--",
+          "/* */"
+        ],
+        correct: 1,
+        hint: "Same as in shell scripts."
+      }
+    ]
+  },
+  "lesson2": {
+    label: "Lesson 2 — Collections Overview",
+    questions: [
+      {
+        q: "Which data structure is ordered and mutable?",
+        options: [
+          "tuple",
+          "list",
+          "set",
+          "dict"
+        ],
+        correct: 1,
+        hint: "The one you index with [0] and can change."
+      },
+      {
+        q: "What is the output of: len(\"hello\")?",
+        options: [
+          "4",
+          "5",
+          "6",
+          "Error"
+        ],
+        correct: 1,
+        hint: "Count the characters."
+      }
+    ]
+  },
+  "lesson3": {
+    label: "Lesson 3 — Variables & Types",
+    questions: [
+      {
+        q: "Which assignment is valid in Python?",
+        options: [
+          "int x = 5",
+          "x := 5",
+          "x = 5",
+          "let x = 5"
+        ],
+        correct: 2,
+        hint: "Python does not need a type keyword."
+      },
+      {
+        q: "Which built-in function shows the type of a value?",
+        options: [
+          "typeof()",
+          "type()",
+          "class()",
+          "kind()"
+        ],
+        correct: 1,
+        hint: "Small four-letter name."
+      }
+    ]
+  },
+  "lesson4": {
+    label: "Lesson 4 — Control Flow",
+    questions: [
+      {
+        q: "Which keyword starts a conditional block?",
+        options: [
+          "if",
+          "when",
+          "case",
+          "check"
+        ],
+        correct: 0,
+        hint: "Same as many other languages."
+      },
+      {
+        q: "Which loop iterates over items in a list?",
+        options: [
+          "loop list:",
+          "for item in list:",
+          "foreach item in list:",
+          "while list:"
+        ],
+        correct: 1,
+        hint: "Very readable syntax."
+      }
+    ]
+  },
+  "lesson5": {
+    label: "Lesson 5 — Functions",
+    questions: [
+      {
+        q: "Which keyword defines a function in Python?",
+        options: [
+          "func",
+          "def",
+          "function",
+          "lambda"
+        ],
+        correct: 1,
+        hint: "Short for 'define'."
+      },
+      {
+        q: "What is the correct way to define a function that takes no arguments?",
+        options: [
+          "def my_func:",
+          "def my_func():",
+          "def my_func[]:",
+          "function my_func():"
+        ],
+        correct: 1,
+        hint: "Parentheses, then colon."
+      }
+    ]
+  },
+  "lesson6": {
+    label: "Lesson 6 — Strings",
+    questions: [
+      {
+        q: "Which operator concatenates two strings?",
+        options: [
+          "+",
+          "&",
+          ".",
+          "concat"
+        ],
+        correct: 0,
+        hint: "Same as addition."
+      },
+      {
+        q: "What is the result of \"py\" * 3?",
+        options: [
+          "\"py3\"",
+          "\"py py py\"",
+          "\"pypy\"",
+          "\"pypypy\""
+        ],
+        correct: 3,
+        hint: "String repetition."
+      }
+    ]
+  },
+  "lesson7": {
+    label: "Lesson 7 — Lists & Tuples",
+    questions: [
+      {
+        q: "Which syntax creates a list?",
+        options: [
+          "(1, 2, 3)",
+          "[1, 2, 3]",
+          "{1, 2, 3}",
+          "<1, 2, 3>"
+        ],
+        correct: 1,
+        hint: "Square brackets."
+      },
+      {
+        q: "Which structure is immutable?",
+        options: [
+          "list",
+          "tuple",
+          "dict",
+          "set"
+        ],
+        correct: 1,
+        hint: "Once created, cannot be changed."
+      }
+    ]
+  },
+  "lesson8": {
+    label: "Lesson 8 — Files",
+    questions: [
+      {
+        q: "Which built-in function opens a file?",
+        options: [
+          "file()",
+          "open()",
+          "read()",
+          "load()"
+        ],
+        correct: 1,
+        hint: "Short and simple."
+      },
+      {
+        q: "Which mode string opens a file for reading?",
+        options: [
+          "\"r\"",
+          "\"w\"",
+          "\"a\"",
+          "\"x\""
+        ],
+        correct: 0,
+        hint: "r = read."
+      }
+    ]
+  },
+  "lesson9": {
+    label: "Lesson 9 — Errors & Exceptions",
+    questions: [
+      {
+        q: "Which keywords start an exception handling block?",
+        options: [
+          "try / except",
+          "catch / except",
+          "handle / catch",
+          "if / else"
+        ],
+        correct: 0,
+        hint: "Very Pythonic."
+      },
+      {
+        q: "Which statement raises an exception manually?",
+        options: [
+          "throw ValueError",
+          "raise ValueError()",
+          "error ValueError()",
+          "except ValueError()"
+        ],
+        correct: 1,
+        hint: "Use 'raise'."
+      }
+    ]
+  }
+};
+
+/* =========================== COURSES CONFIG =========================== */
+const COURSES = {
+  java: {
+    id: "java",
+    name: "Java",
+    sets: JAVA_QUESTION_SETS,
+    lessons: [
+      { title: "Lesson 1: Variables in Java", quizzes: [{ label: "Lesson 1 Quiz", key: "lesson1" }] },
+      { title: "Lesson 2: Data Types in Java", quizzes: [{ label: "Lesson 2 Quiz", key: "lesson2" }] },
+      { title: "Lesson 3: Declaring & Initializing Variables", quizzes: [{ label: "Lesson 3 Quiz", key: "lesson3" }] },
+      { title: "Lesson 4: Control Flow", quizzes: [{ label: "Lesson 4 Quiz", key: "lesson4" }] },
+      { title: "Lesson 5: Conditional Statements", quizzes: [{ label: "Lesson 5 Quiz", key: "lesson5" }] },
+      { title: "Lesson 6: Switch and Ternary Operator", quizzes: [{ label: "Lesson 6 Quiz", key: "lesson6" }] },
+      { title: "Lesson 7: OOP Concepts", quizzes: [{ label: "Lesson 7 Quiz", key: "lesson7" }] },
+      { title: "Lesson 8: OOP Principles in Action", quizzes: [{ label: "Lesson 8 Quiz", key: "lesson8" }] },
+      { title: "Lesson 9: Arrays & Collection", quizzes: [{ label: "Lesson 9 Quiz", key: "lesson9" }] },
+      { title: "Final Boss: Post Test", quizzes: [{ label: "Post-Test (Java)", key: "final-boss" }] },
+      { title: "Pre-Test", quizzes: [{ label: "Pre-Test (same questions as Post-Test)", key: "pre-test" }] }
+    ]
+  },
+  html: {
+    id: "html",
+    name: "HTML",
+    sets: HTML_QUESTION_SETS,
+    lessons: [
+      { title: "Lesson 1: HTML Basics", quizzes: [{ label: "Lesson 1 Quiz", key: "lesson1" }] },
+      { title: "Lesson 2: HTML Structure", quizzes: [{ label: "Lesson 2 Quiz", key: "lesson2" }] },
+      { title: "Lesson 3: Text & Lists", quizzes: [{ label: "Lesson 3 Quiz", key: "lesson3" }] },
+      { title: "Lesson 4: Links & Images", quizzes: [{ label: "Lesson 4 Quiz", key: "lesson4" }] },
+      { title: "Lesson 5: Tables", quizzes: [{ label: "Lesson 5 Quiz", key: "lesson5" }] },
+      { title: "Lesson 6: Forms", quizzes: [{ label: "Lesson 6 Quiz", key: "lesson6" }] },
+      { title: "Lesson 7: Semantic HTML", quizzes: [{ label: "Lesson 7 Quiz", key: "lesson7" }] },
+      { title: "Lesson 8: Media & Embeds", quizzes: [{ label: "Lesson 8 Quiz", key: "lesson8" }] },
+      { title: "Lesson 9: Accessibility & Best Practices", quizzes: [{ label: "Lesson 9 Quiz", key: "lesson9" }] }
+    ]
+  },
+  css: {
+    id: "css",
+    name: "CSS",
+    sets: CSS_QUESTION_SETS,
+    lessons: [
+      { title: "Lesson 1: CSS Basics", quizzes: [{ label: "Lesson 1 Quiz", key: "lesson1" }] },
+      { title: "Lesson 2: Colors & Text", quizzes: [{ label: "Lesson 2 Quiz", key: "lesson2" }] },
+      { title: "Lesson 3: Box Model", quizzes: [{ label: "Lesson 3 Quiz", key: "lesson3" }] },
+      { title: "Lesson 4: Layout & Display", quizzes: [{ label: "Lesson 4 Quiz", key: "lesson4" }] },
+      { title: "Lesson 5: Flexbox Basics", quizzes: [{ label: "Lesson 5 Quiz", key: "lesson5" }] },
+      { title: "Lesson 6: Positioning", quizzes: [{ label: "Lesson 6 Quiz", key: "lesson6" }] },
+      { title: "Lesson 7: Responsive Design", quizzes: [{ label: "Lesson 7 Quiz", key: "lesson7" }] },
+      { title: "Lesson 8: Transitions & Animations", quizzes: [{ label: "Lesson 8 Quiz", key: "lesson8" }] },
+      { title: "Lesson 9: Best Practices", quizzes: [{ label: "Lesson 9 Quiz", key: "lesson9" }] }
+    ]
+  },
+  js: {
+    id: "js",
+    name: "JavaScript",
+    sets: JS_QUESTION_SETS,
+    lessons: [
+      { title: "Lesson 1: JavaScript Basics", quizzes: [{ label: "Lesson 1 Quiz", key: "lesson1" }] },
+      { title: "Lesson 2: Data & Types", quizzes: [{ label: "Lesson 2 Quiz", key: "lesson2" }] },
+      { title: "Lesson 3: Operators & Control Flow", quizzes: [{ label: "Lesson 3 Quiz", key: "lesson3" }] },
+      { title: "Lesson 4: Functions", quizzes: [{ label: "Lesson 4 Quiz", key: "lesson4" }] },
+      { title: "Lesson 5: Arrays", quizzes: [{ label: "Lesson 5 Quiz", key: "lesson5" }] },
+      { title: "Lesson 6: Objects", quizzes: [{ label: "Lesson 6 Quiz", key: "lesson6" }] },
+      { title: "Lesson 7: DOM Basics", quizzes: [{ label: "Lesson 7 Quiz", key: "lesson7" }] },
+      { title: "Lesson 8: Events", quizzes: [{ label: "Lesson 8 Quiz", key: "lesson8" }] },
+      { title: "Lesson 9: Debugging & Console", quizzes: [{ label: "Lesson 9 Quiz", key: "lesson9" }] }
+    ]
+  },
+  python: {
+    id: "python",
+    name: "Python",
+    sets: PYTHON_QUESTION_SETS,
+    lessons: [
+      { title: "Lesson 1: Python Basics", quizzes: [{ label: "Lesson 1 Quiz", key: "lesson1" }] },
+      { title: "Lesson 2: Collections Overview", quizzes: [{ label: "Lesson 2 Quiz", key: "lesson2" }] },
+      { title: "Lesson 3: Variables & Types", quizzes: [{ label: "Lesson 3 Quiz", key: "lesson3" }] },
+      { title: "Lesson 4: Control Flow", quizzes: [{ label: "Lesson 4 Quiz", key: "lesson4" }] },
+      { title: "Lesson 5: Functions", quizzes: [{ label: "Lesson 5 Quiz", key: "lesson5" }] },
+      { title: "Lesson 6: Strings", quizzes: [{ label: "Lesson 6 Quiz", key: "lesson6" }] },
+      { title: "Lesson 7: Lists & Tuples", quizzes: [{ label: "Lesson 7 Quiz", key: "lesson7" }] },
+      { title: "Lesson 8: Files", quizzes: [{ label: "Lesson 8 Quiz", key: "lesson8" }] },
+      { title: "Lesson 9: Errors & Exceptions", quizzes: [{ label: "Lesson 9 Quiz", key: "lesson9" }] }
+    ]
+  }
+};
+
+const DEFAULT_COURSE_KEY = "java";
+
+/* ========== STATE ========== */
+const DEFAULT_HEARTS = 5;
+const PASS_THRESHOLD = 0.7; // 70% to "pass"
+
+let currentCourseKey = DEFAULT_COURSE_KEY;
+let currentSetKey = null;
+let currentIndex = 0;
+let selectedAnswer = 0;
+let hearts = DEFAULT_HEARTS;
+let correctCount = 0;
+let timerSeconds = 0;
+let timerInterval = null;
+let timerRunning = false;
+let mapPositions = [];
+let quizStartTime = null;
+let sectionStats = {};
+let paramStats = {};
+let answeredFlags = [];
+let lichHealth = 3;
+let currentLessonFilter = "";
+let musicEnabled = false; // Track music state
+let backgroundMusic = null; // Audio object
+let quizEnded = false; // NEW: Track if quiz has ended
+
+/* ========== ELEMENTS ========== */
+const screenTitleEl = document.getElementById("screenTitle");
+const questionTextEl = document.getElementById("questionText");
+const answersTextEl = document.getElementById("answersText");
+const timerDisplayEl = document.getElementById("timerDisplay");
+const heartsDisplayEl = document.getElementById("heartsDisplay");
+const submitBtn = document.getElementById("submitBtn");
+const hintBtn = document.getElementById("hintBtn");
+const chooseBtn = document.getElementById("chooseBtn");
+const resourcesBtn = document.getElementById("resourcesBtn");
+const viewStatsBtn = document.getElementById("viewStatsBtn"); // CHANGED: from statsBtn to viewStatsBtn
+const coursesBtn = document.getElementById("coursesBtn");
+const homeBtn = document.getElementById("homeBtn");
+const continueBtn = document.getElementById("continueBtn");
+const newSaveBtn = document.getElementById("newSaveBtn");
+const settingsBtn = document.getElementById("settingsBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const leaderboardBtn = document.getElementById("leaderboardBtn");
+const javaPageBtn = document.getElementById("javaPageBtn");
+const htmlPageBtn = document.getElementById("htmlPageBtn");
+const cssPageBtn = document.getElementById("cssPageBtn");
+const jsPageBtn = document.getElementById("jsPageBtn");
+const pythonPageBtn = document.getElementById("pythonPageBtn");
+const musicBtn = document.getElementById("musicBtn");
+const musicIcon = document.getElementById("musicIcon");
+
+const pillA = document.getElementById("pillA");
+const pillB = document.getElementById("pillB");
+const pillC = document.getElementById("pillC");
+const pillD = document.getElementById("pillD");
+const letterPills = [pillA, pillB, pillC, pillD];
+
+const mapTrackEl = document.getElementById("mapTrack");
+const mapMarkerEl = document.getElementById("mapMarker");
+const mapSetLabel = document.getElementById("mapSetLabel");
+const mapQLabel = document.getElementById("mapQuestionLabel");
+const mapCardEl = document.getElementById("mapCard");
+const mapOverlay = document.getElementById("mapOverlay");
+const overlayTrack = document.getElementById("overlayTrack");
+const overlayMarker = document.getElementById("overlayMarker");
+const overlayNodesWrap = document.getElementById("overlayNodes");
+const overlayInfo = document.getElementById("overlayInfo");
+const overlayClose = document.getElementById("overlayClose");
+
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalBody = document.getElementById("modalBody");
+const modalClose = document.getElementById("modalClose");
+const modalCloseX = document.getElementById("modalCloseX");
+
+const courseLabelEl = document.getElementById("currentCourseLabel");
+const lessonListEl = document.getElementById("lessonList");
+const lessonsTitleEl = document.getElementById("lessonsTitle");
+const lessonSearchEl = document.getElementById("lessonSearch");
+const iconSearchEl = document.getElementById("iconSearch");
+
+const finnHero = document.querySelector(".hero-finn");
+const jakeHero = document.querySelector(".hero-jake");
+const lichHero = document.querySelector(".hero-lich");
+
+/* ========== NEW: ANALYTICS STORAGE & RETRIEVAL ========== */
+function saveDetailedAnalytics(setKey, analytics) {
+  try {
+    const course = currentCourseKey;
+    const ident = qvGetIdentityForStats();
+    const emailRaw = (ident.email || "__unknown__").toLowerCase();
+    const safeEmail = emailRaw.replace(/[^a-z0-9@._-]/g, "_");
+
+    // Ensure email/name are stored in the analytics payload for display/export
+    const payload = {
+      ...analytics,
+      email: analytics?.email || ident.email || "",
+      name: analytics?.name || ident.name || ""
+    };
+
+    // Store per-user + per-course + per-test
+    const key = `quizAnalytics_${safeEmail}_${course}_${setKey}`;
+    localStorage.setItem(key, JSON.stringify(payload));
+
+    // Backward-compat fallback key (older versions)
+    try {
+      const legacyKey = `quizAnalytics_${course}_${setKey}`;
+      localStorage.setItem(legacyKey, JSON.stringify(payload));
+    } catch (e) {}
+
+    return true;
+  } catch (e) {
+    console.error("Failed to save detailed analytics:", e);
+    return false;
+  }
+}
+
+function loadDetailedAnalytics(setKey) {
+  try {
+    const course = currentCourseKey;
+    const ident = qvGetIdentityForStats();
+    const emailRaw = (ident.email || "__unknown__").toLowerCase();
+    const safeEmail = emailRaw.replace(/[^a-z0-9@._-]/g, "_");
+
+    // Prefer per-user key
+    const key = `quizAnalytics_${safeEmail}_${course}_${setKey}`;
+    const raw = localStorage.getItem(key);
+    if (raw) return JSON.parse(raw);
+
+    // Fallback: legacy key (older versions)
+    const legacyKey = `quizAnalytics_${course}_${setKey}`;
+    const legacyRaw = localStorage.getItem(legacyKey);
+    return legacyRaw ? JSON.parse(legacyRaw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/* ========== NEW: STATS STORAGE & MANAGEMENT ========== */
+const STATS_STORAGE_KEY = "quizAdventureStats";
+
+// NEW: identify the current logged-in user for stats attribution
+function qvGetIdentityForStats() {
+  try {
+    const user = (typeof qvGetCurrentUser === "function") ? qvGetCurrentUser() : null;
+    const email = user?.email || (typeof qvGetSessionEmail === "function" ? qvGetSessionEmail() : "") || "";
+    const name = user?.name || "";
+    return { email, name };
+  } catch (e) {
+    return { email: "", name: "" };
+  }
+}
+
+// NEW: normalize legacy stats shape into the current shape
+function qvNormalizeAllStats(rawStats) {
+  // Current shape:
+  // { [email]: { [courseKey]: { [setKey]: {score,total,passed,timeTaken,timestamp,date,email,name} } } }
+  // Legacy shape (older builds):
+  // { [courseKey]: { [setKey]: {...} } }
+  if (!rawStats || typeof rawStats !== "object") return {};
+
+  const keys = Object.keys(rawStats);
+  const looksLikeEmailKeys = keys.some(k => String(k).includes("@"));
+
+  if (looksLikeEmailKeys) return rawStats;
+
+  // If keys look like course keys, wrap into a legacy bucket
+  return { "__legacy__": rawStats };
+}
+
+
+// Per-user quiz progress + global leaderboard (stored in the same browser)
+const QV_PROGRESS_KEY = "qv_quiz_progress";
+const QV_LEADERBOARD_KEY = "qv_leaderboard";
+
+function qvSafeJsonParse(raw, fallback) {
+  try {
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function qvProgressKey(course, setKey, email) {
+  return `${email || ""}__${course || ""}__${setKey || ""}`;
+}
+
+function qvLoadAllProgress() {
+  return qvSafeJsonParse(localStorage.getItem(QV_PROGRESS_KEY), {});
+}
+
+function qvSaveAllProgress(obj) {
+  try {
+    localStorage.setItem(QV_PROGRESS_KEY, JSON.stringify(obj));
+  } catch (e) {
+    // ignore
+  }
+}
+
+function qvSaveProgress({ course, setKey, currentIndex, correctCount, hearts, timerSeconds }) {
+  const user = (typeof qvGetCurrentUser === "function") ? qvGetCurrentUser() : null;
+  const email = user?.email || "";
+  if (!email || !course || !setKey) return;
+
+  const all = qvLoadAllProgress();
+  const k = qvProgressKey(course, setKey, email);
+  all[k] = {
+    email,
+    name: user?.name || "",
+    course,
+    setKey,
+    currentIndex: Number(currentIndex || 0),
+    correctCount: Number(correctCount || 0),
+    hearts: Number(hearts || 0),
+    timerSeconds: Number(timerSeconds || 0),
+    savedAt: Date.now(),
+    inProgress: true
+  };
+  qvSaveAllProgress(all);
+}
+
+function qvLoadProgress({ course, setKey }) {
+  const user = (typeof qvGetCurrentUser === "function") ? qvGetCurrentUser() : null;
+  const email = user?.email || "";
+  if (!email || !course || !setKey) return null;
+  const all = qvLoadAllProgress();
+  const k = qvProgressKey(course, setKey, email);
+  return all[k] || null;
+}
+
+function qvClearProgress({ course, setKey }) {
+  const user = (typeof qvGetCurrentUser === "function") ? qvGetCurrentUser() : null;
+  const email = user?.email || "";
+  if (!email || !course || !setKey) return;
+  const all = qvLoadAllProgress();
+  const k = qvProgressKey(course, setKey, email);
+  delete all[k];
+  qvSaveAllProgress(all);
+}
+
+function qvLoadLeaderboard() {
+  return qvSafeJsonParse(localStorage.getItem(QV_LEADERBOARD_KEY), []);
+}
+
+function qvSaveLeaderboard(rows) {
+  try {
+    localStorage.setItem(QV_LEADERBOARD_KEY, JSON.stringify(rows));
+  } catch (e) {
+    // ignore
+  }
+}
+
+// Keep ONE "best" result per user per (course + quiz)
+function qvUpsertLeaderboardEntry({ course, setKey, score, total, passed, timeTaken }) {
+  const user = (typeof qvGetCurrentUser === "function") ? qvGetCurrentUser() : null;
+  const email = user?.email || "";
+  if (!email || !course || !setKey) return;
+
+  const name = user?.name || email;
+  const rows = qvLoadLeaderboard();
+  const id = `${email}__${course}__${setKey}`;
+
+  const existingIndex = rows.findIndex(r => r.id === id);
+  const next = {
+    id,
+    email,
+    name,
+    course,
+    setKey,
+    score: Number(score || 0),
+    total: Number(total || 0),
+    passed: !!passed,
+    timeTaken: (timeTaken === null || typeof timeTaken === "undefined") ? null : Number(timeTaken),
+    updatedAt: Date.now()
+  };
+
+  if (existingIndex === -1) {
+    rows.push(next);
+    qvSaveLeaderboard(rows);
+    return;
+  }
+
+  const prev = rows[existingIndex];
+
+  // Decide "best": higher score wins; if tie, lower time wins (if both have time)
+  const prevScore = Number(prev?.score || 0);
+  const prevTime = (prev?.timeTaken === null || typeof prev?.timeTaken === "undefined") ? null : Number(prev.timeTaken);
+  const nextTime = next.timeTaken;
+
+  const isBetterScore = next.score > prevScore;
+  const isTieScore = next.score === prevScore;
+  const isBetterTime = (isTieScore && prevTime !== null && nextTime !== null) ? (nextTime < prevTime) : false;
+
+  if (isBetterScore || isBetterTime) {
+    rows[existingIndex] = next;
+  } else {
+    // still update timestamp so we know they attempted recently
+    rows[existingIndex] = { ...prev, updatedAt: Date.now() };
+  }
+
+  qvSaveLeaderboard(rows);
+}
+
+function saveQuizResult(setKey, score, total, passed, timeTaken = null) {
+  try {
+    const course = currentCourseKey;
+    const stats = loadAllStats();
+
+    const ident = qvGetIdentityForStats();
+    const email = ident.email || "__unknown__";
+
+    if (!stats[email]) stats[email] = {};
+    if (!stats[email][course]) stats[email][course] = {};
+
+    stats[email][course][setKey] = {
+      email: ident.email || "",
+      name: ident.name || "",
+      course: course,
+      setKey: setKey,
+      score: score,
+      total: total,
+      passed: passed,
+      timeTaken: timeTaken,
+      timestamp: Date.now(),
+      date: new Date().toLocaleDateString()
+    };
+
+    localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(stats));
+    return true;
+  } catch (e) {
+    console.error("Failed to save stats:", e);
+    return false;
+  }
+}
+
+function loadAllStats() {
+  try {
+    const raw = localStorage.getItem(STATS_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return qvNormalizeAllStats(parsed);
+  } catch (e) {
+    return {};
+  }
+}
+
+function getCourseStats(courseKey) {
+  const stats = loadAllStats();
+  const ident = qvGetIdentityForStats();
+  const email = ident.email || "__unknown__";
+  const userStats = stats[email] || {};
+  return userStats[courseKey] || {};
+}
+
+function clearStatsForCourse(courseKey) {
+  try {
+    const stats = loadAllStats();
+    const ident = qvGetIdentityForStats();
+    const email = ident.email || "__unknown__";
+    if (stats[email]) {
+      delete stats[email][courseKey];
+    }
+    localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(stats));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function clearAllStats() {
+  try {
+    localStorage.removeItem(STATS_STORAGE_KEY);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/* ========== NEW: DETAILED ANALYTICS VIEWER ========== */
+function showDetailedAnalytics(setKey) {
+  const analytics = loadDetailedAnalytics(setKey);
+  const isPreTest = setKey === "pre-test";
+  const ident = qvGetIdentityForStats();
+  const displayEmail = (analytics?.email || ident.email || "").trim();
+  const titleBase = isPreTest ? "Pre-Test Detailed Analytics" : "Post-Test Detailed Analytics";
+  const title = displayEmail ? `${titleBase} — ${displayEmail}` : titleBase;
+  
+  if (!analytics) {
+    showModal(
+      title,
+      "<p>No detailed analytics found for this test. Complete the test first to see analytics.</p>"
+    );
+    return;
+  }
+  
+  let html = `<h4>Overall Performance</h4>`;
+  if (displayEmail) {
+    html += `<p style="font-size:10px;"><strong>Gmail Used:</strong> ${displayEmail}</p>`;
+  }
+  html += `<p><strong>Score:</strong> ${analytics.correctCount} / ${analytics.totalQuestions} (${analytics.scorePct}%)</p>`;
+  html += `<p><strong>Status:</strong> ${analytics.passed ? '<span style="color:#1c9f4e;">PASSED</span>' : '<span style="color:#d93333;">NEEDS IMPROVEMENT</span>'}</p>`;
+  
+  if (analytics.elapsedSec) {
+    const mins = Math.floor(analytics.elapsedSec / 60);
+    const secs = analytics.elapsedSec % 60;
+    html += `<p><strong>Completion Time:</strong> ${mins}m ${secs}s</p>`;
+  }
+  
+  html += `<h4>Section Breakdown</h4><table class="stats-table"><thead><tr><th>Section</th><th>Correct</th><th>Total</th><th>Percentage</th></tr></thead><tbody>`;
+  
+  if (analytics.sectionStats) {
+    Object.entries(SECTION_CONFIG).forEach(([code, label]) => {
+      const stat = analytics.sectionStats[code] || { correct: 0, total: 0 };
+      const pct = stat.total
+        ? Math.round((stat.correct / stat.total) * 100)
+        : 0;
+      const color = pct >= 70 ? "#1c9f4e" : pct >= 50 ? "#f4a623" : "#d93333";
+      html += `<tr>
+        <td>${label}</td>
+        <td>${stat.correct}</td>
+        <td>${stat.total}</td>
+        <td style="color:${color};font-weight:bold;">${pct}%</td>
+      </tr>`;
+    });
+  }
+  
+  html += `</tbody></table>`;
+  
+  html += `<h4>Skill & Performance Metrics</h4><table class="stats-table"><thead><tr><th>Skill</th><th>Correct</th><th>Total</th><th>Percentage</th><th>Tips</th></tr></thead><tbody>`;
+  
+  if (analytics.paramStats) {
+    Object.entries(PARAM_CONFIG).forEach(([key, cfg]) => {
+      const stat = analytics.paramStats[key] || { correct: 0, total: 0 };
+      if (!stat.total) return;
+      const pct = Math.round((stat.correct / stat.total) * 100);
+      const color = pct >= 70 ? "#1c9f4e" : pct >= 50 ? "#f4a623" : "#d93333";
+      const tip = pct < 70 ? cfg.tip : "Good job! Keep practicing.";
+      
+      html += `<tr>
+        <td><strong>${cfg.label}</strong></td>
+        <td>${stat.correct}</td>
+        <td>${stat.total}</td>
+        <td style="color:${color};font-weight:bold;">${pct}%</td>
+        <td style="font-size:9px;">${tip}</td>
+      </tr>`;
+    });
+  }
+  
+  html += `</tbody></table>`;
+  
+  // Add timestamp
+  if (analytics.timestamp) {
+    const date = new Date(analytics.timestamp).toLocaleString();
+    html += `<p style="font-size:9px;color:#666;margin-top:12px;">Analytics generated: ${date}</p>`;
+  }
+  
+  // Add comparison for post-test
+  if (!isPreTest) {
+    const preAnalytics = loadDetailedAnalytics("pre-test");
+    if (preAnalytics) {
+      html += `<h4>Pre-Test vs Post-Test Comparison</h4>`;
+      
+      // Overall comparison
+      const prePct = Math.round((preAnalytics.correctCount / preAnalytics.totalQuestions) * 100);
+      const postPct = analytics.scorePct;
+      const diffPct = postPct - prePct;
+      const diffCorrect = analytics.correctCount - preAnalytics.correctCount;
+      const signP = diffPct >= 0 ? "+" : "";
+      const signQ = diffCorrect >= 0 ? "+" : "";
+      
+      html += `<p><strong>Overall Improvement:</strong> ${signQ}${diffCorrect} questions (${signP}${diffPct}%)</p>`;
+      
+      // Section comparison
+      html += `<h5>Section-by-Section Improvement</h5><table class="stats-table"><thead><tr><th>Section</th><th>Pre-Test</th><th>Post-Test</th><th>Improvement</th></tr></thead><tbody>`;
+      
+      Object.entries(SECTION_CONFIG).forEach(([code, label]) => {
+        const preStat = preAnalytics.sectionStats[code] || { correct: 0, total: 0 };
+        const postStat = analytics.sectionStats[code] || { correct: 0, total: 0 };
+        
+        if (preStat.total > 0 && postStat.total > 0) {
+          const prePct = Math.round((preStat.correct / preStat.total) * 100);
+          const postPct = Math.round((postStat.correct / postStat.total) * 100);
+          const diff = postPct - prePct;
+          const sign = diff >= 0 ? "+" : "";
+          
+          html += `<tr>
+            <td>${label}</td>
+            <td>${preStat.correct}/${preStat.total} (${prePct}%)</td>
+            <td>${postStat.correct}/${postStat.total} (${postPct}%)</td>
+            <td style="color:${diff >= 0 ? '#1c9f4e' : '#d93333'};font-weight:bold;">${sign}${diff}%</td>
+          </tr>`;
+        }
+      });
+      
+      html += `</tbody></table>`;
+    }
+  }
+  
+  // Add buttons to manage analytics
+  html += `<div style="margin-top:12px;display:flex;gap:6px;">
+    <button id="exportAnalytics" class="close" style="background:#0c9a8d;color:#fff;">
+      Export Analytics
+    </button>
+    <button id="printAnalytics" class="close" style="background:#9c27b0;color:#fff;">
+      Print Analytics
+    </button>
+  </div>`;
+  
+  showModal(title, html);
+  
+  // Add event listeners for buttons
+  setTimeout(() => {
+    const exportBtn = document.getElementById("exportAnalytics");
+    const printBtn = document.getElementById("printAnalytics");
+    
+    if (exportBtn) {
+      exportBtn.addEventListener("click", () => {
+        exportAnalyticsAsJSON(setKey, analytics);
+      });
+    }
+    
+    if (printBtn) {
+      printBtn.addEventListener("click", () => {
+        window.print();
+      });
+    }
+  }, 100);
+}
+
+/* ========== NEW: EXPORT ANALYTICS FUNCTION ========== */
+function exportAnalyticsAsJSON(setKey, analytics) {
+  try {
+    const course = currentCourseKey;
+    const courseName = COURSES[course] ? COURSES[course].name : course;
+    const isPreTest = setKey === "pre-test";
+    const testName = isPreTest ? "Pre-Test" : "Post-Test";
+    
+    const exportData = {
+      course: courseName,
+      test: testName,
+      date: new Date().toLocaleString(),
+      ...analytics
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `${courseName}_${testName}_Analytics_${Date.now()}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    
+    showModal(
+      "Export Successful",
+      `<p>Analytics exported as JSON file. You can open this file in any text editor or import it into other tools.</p>
+       <p style="font-size:10px;">File saved as: <strong>${exportFileDefaultName}</strong></p>`
+    );
+  } catch (e) {
+    showModal(
+      "Export Failed",
+      `<p>Could not export analytics: ${e.message}</p>
+       <p style="font-size:10px;">You can manually copy the analytics from the screen above.</p>`
+    );
+  }
+}
+
+/* ========== MODIFIED: SHOW ALL STATS VIEW ========== */
+function showAllStatsView() {
+  const stats = loadAllStats();
+  let html = '<h4>All Completed Quizzes</h4>';
+
+  if (Object.keys(stats).length === 0) {
+    html += '<div class="empty-stats">No completed quizzes found. Complete some lessons to see stats here!</div>';
+  } else {
+    html += '<table class="stats-table"><thead><tr><th>Gmail</th><th>Course</th><th>Quiz</th><th>Score</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
+
+    Object.keys(stats).forEach(emailKey => {
+      const perUser = stats[emailKey] || {};
+
+      Object.keys(perUser).forEach(courseKey => {
+        const course = COURSES[courseKey];
+        const courseName = course ? course.name : courseKey;
+        const courseStats = perUser[courseKey] || {};
+
+        Object.keys(courseStats).forEach(setKey => {
+          const result = courseStats[setKey];
+          const sets = course ? course.sets : JAVA_QUESTION_SETS;
+          const setLabel = sets[setKey] ? sets[setKey].label : setKey;
+          const percentage = Math.round((result.score / result.total) * 100);
+          const status = result.passed ? '<span class="passed">PASSED</span>' : '<span class="failed">FAILED</span>';
+
+          // Check if detailed analytics exist (analytics are stored per currentCourseKey + setKey)
+          // We keep this behavior, but the button still helps when viewing analytics for current logged-in user.
+          const hasAnalytics = loadDetailedAnalytics(setKey) !== null;
+          const viewAnalyticsBtn = hasAnalytics
+            ? `<button class="view-analytics-btn" data-course="${courseKey}" data-set="${setKey}" style="background:#2967d8;color:#fff;border:none;padding:3px 6px;border-radius:4px;font-size:8px;cursor:pointer;">View Analytics</button>`
+            : '<span style="color:#999;font-size:8px;">No analytics</span>';
+
+          const displayEmail = (result.email && String(result.email).trim()) ? result.email : (emailKey === '__legacy__' ? 'Legacy (unknown)' : emailKey);
+
+          html += `<tr>
+            <td>${displayEmail}</td>
+            <td>${courseName}</td>
+            <td>${setLabel}</td>
+            <td class="score-cell">${result.score}/${result.total} (${percentage}%)</td>
+            <td>${status}</td>
+            <td>${result.date || ''}</td>
+            <td>${viewAnalyticsBtn}</td>
+          </tr>`;
+        });
+      });
+    });
+
+    html += '</tbody></table>';
+
+    // Add buttons for management (applies to current logged-in user)
+    html += `<div style="margin-top:12px;display:flex;gap:6px;">
+      <button id="clearCurrentStats" class="close" style="background:#d93333;color:#fff;">Clear current course stats</button>
+      <button id="clearAllStats" class="close" style="background:#ff9800;color:#fff;">Clear all stats</button>
+    </div>`;
+  }
+
+  showModal("Quiz Statistics", html);
+
+  // Add event listeners for the buttons
+  const clearCurrentBtn = document.getElementById("clearCurrentStats");
+  const clearAllBtn = document.getElementById("clearAllStats");
+
+  if (clearCurrentBtn) {
+    clearCurrentBtn.addEventListener("click", () => {
+      if (confirm("Clear stats for the current course (for the current logged-in user)?")) {
+        clearStatsForCourse(currentCourseKey);
+        showAllStatsView();
+      }
+    });
+  }
+
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener("click", () => {
+      if (confirm("Clear ALL stored stats for ALL users on this browser?")) {
+        clearAllStats();
+        showAllStatsView();
+      }
+    });
+  }
+
+  // Analytics buttons
+  setTimeout(() => {
+    document.querySelectorAll('.view-analytics-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const setKey = btn.getAttribute('data-set');
+        showDetailedAnalytics(setKey);
+      });
+    });
+  }, 100);
+}
+
+/* ========== MUSIC FUNCTIONALITY ========== */
+function initBackgroundMusic() {
+  // Create audio element for background music
+  backgroundMusic = new Audio();
+  backgroundMusic.loop = true;
+  backgroundMusic.volume = 0.5;
+  
+  // You can set a default music source here
+  // For example: backgroundMusic.src = "music/background.mp3";
+  
+  // For now, we'll use a placeholder
+  backgroundMusic.src = "music.mp3";
+  backgroundMusic.onerror = () => {
+    console.log("Music file failed to load");
+    musicEnabled = false;
+    updateMusicButton();
+  };
+}
+
+function toggleMusic() {
+  musicEnabled = !musicEnabled;
+  updateMusicButton();
+  
+  if (musicEnabled) {
+    if (backgroundMusic) {
+      backgroundMusic.play().catch(e => {
+        console.log("Audio play failed:", e);
+        musicEnabled = false;
+        updateMusicButton();
+      });
+    }
+  } else {
+    if (backgroundMusic) {
+      backgroundMusic.pause();
+    }
+  }
+  
+  // Save preference to localStorage
+  try {
+    localStorage.setItem("quizMusicEnabled", musicEnabled ? "true" : "false");
+  } catch (e) {
+    // Ignore storage errors
+  }
+}
+
+function updateMusicButton() {
+  if (!musicBtn || !musicIcon) return;
+  
+  if (musicEnabled) {
+    musicBtn.classList.remove("purple");
+    musicBtn.classList.add("green");
+    musicIcon.textContent = "♪";
+    musicBtn.title = "Music ON (click to turn off)";
+  } else {
+    musicBtn.classList.remove("green");
+    musicBtn.classList.add("purple");
+    musicIcon.textContent = "♫";
+    musicBtn.title = "Music OFF (click to turn on)";
+  }
+}
+
+function loadMusicPreference() {
+  try {
+    const saved = localStorage.getItem("quizMusicEnabled");
+    if (saved !== null) {
+      musicEnabled = saved === "true";
+    }
+  } catch (e) {
+    // Ignore storage errors
+  }
+  updateMusicButton();
+}
+
+/* ========== HELPERS ========== */
+function getActiveSets() {
+  const course = COURSES[currentCourseKey];
+  return course ? course.sets : JAVA_QUESTION_SETS;
+}
+
+function currentSet() {
+  if (!currentSetKey) return null;
+  const sets = getActiveSets();
+  return sets[currentSetKey] || null;
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, "0");
+  const s = (sec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function updateTimerDisplay() {
+  if (!timerRunning && timerSeconds <= 0) {
+    timerDisplayEl.textContent = "--:--";
+  } else {
+    timerDisplayEl.textContent = formatTime(timerSeconds);
+  }
+}
+
+function resetTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+  timerInterval = null;
+  timerRunning = false;
+  timerSeconds = 0;
+  updateTimerDisplay();
+}
+
+function startTimerIfNeeded() {
+  if (timerRunning || timerInterval) return;
+  timerRunning = true;
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function updateHeartsDisplay() {
+  heartsDisplayEl.textContent = hearts > 0 ? `♥ x${hearts}` : "💀";
+}
+
+function updateCourseLabel() {
+  const course = COURSES[currentCourseKey];
+  if (courseLabelEl && course) {
+    courseLabelEl.textContent = course.name;
+  }
+}
+
+function showModal(title, html) {
+  modalTitle.textContent = title;
+  modalBody.innerHTML = html;
+  modal.classList.add("show");
+}
+
+function hideModal() {
+  modal.classList.remove("show");
+}
+
+/* ========== ANALYTICS HELPERS ========== */
+function resetAnalyticsForSet(key) {
+  sectionStats = {};
+  paramStats = {};
+  answeredFlags = [];
+  quizStartTime = null;
+  quizEnded = false; // Reset quiz ended flag
+
+  const sets = getActiveSets();
+  const set = sets[key];
+  if (!set) return;
+
+  if (key === "final-boss") {
+    Object.keys(SECTION_CONFIG).forEach(code => {
+      sectionStats[code] = { correct: 0, total: 0 };
+    });
+    Object.keys(PARAM_CONFIG).forEach(p => {
+      paramStats[p] = { correct: 0, total: 0 };
+    });
+    answeredFlags = new Array(set.questions.length).fill(false);
+    quizStartTime = Date.now();
+  }
+}
+
+function recordAnalytics(index, isCorrect) {
+  if (currentSetKey !== "final-boss") return;
+  const set = currentSet();
+  if (!set || !Array.isArray(set.questions)) return;
+  if (index < 0 || index >= set.questions.length) return;
+  if (answeredFlags[index]) return;
+
+  answeredFlags[index] = true;
+  const q = set.questions[index];
+
+  if (q.section && sectionStats[q.section]) {
+    sectionStats[q.section].total++;
+    if (isCorrect) sectionStats[q.section].correct++;
+  }
+
+  if (Array.isArray(q.params)) {
+    q.params.forEach(p => {
+      if (!paramStats[p]) paramStats[p] = { correct: 0, total: 0 };
+      paramStats[p].total++;
+      if (isCorrect) paramStats[p].correct++;
+    });
+  }
+}
+
+/* ========= PRE/POST STORAGE HELPERS ========= */
+function saveTestResult(type, totalQuestions) {
+  const key =
+    type === "pre"
+      ? `preTest_${currentCourseKey}`
+      : `postTest_${currentCourseKey}`;
+
+  const payload = {
+    correct: correctCount,
+    total: totalQuestions,
+    timestamp: Date.now()
+  };
+
+  try {
+    localStorage.setItem(key, JSON.stringify(payload));
+  } catch (e) {
+    // ignore storage issues
+  }
+}
+
+function getTestResult(type) {
+  const key =
+    type === "pre"
+      ? `preTest_${currentCourseKey}`
+      : `postTest_${currentCourseKey}`;
+
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    return null;
+  }
+}
+
+/* ========== RESULTS RENDERING ========== */
+function showPreTestResults(set) {
+  const totalQuestions = set.questions.length;
+  const scorePct = Math.round((correctCount / totalQuestions) * 100);
+  const passed = scorePct >= (PASS_THRESHOLD * 100);
+  
+  // Save detailed analytics
+  const ident = qvGetIdentityForStats();
+  const analytics = {
+    email: ident.email || "",
+    name: ident.name || "",
+    sectionStats: { ...sectionStats },
+    paramStats: { ...paramStats },
+    totalQuestions: totalQuestions,
+    correctCount: correctCount,
+    scorePct: scorePct,
+    passed: passed,
+    timestamp: Date.now()
+  };
+  saveDetailedAnalytics("pre-test", analytics);
+  
+  // Save to stats
+  saveQuizResult("pre-test", correctCount, totalQuestions, passed, timerSeconds);
+
+  const html = `
+    <p><strong>Pre-Test Score:</strong> ${correctCount} / ${totalQuestions} (${scorePct}%)</p>
+    <p style="font-size:11px;opacity:0.8;">
+      This result is saved and will be compared with your Post-Test score on the same question set.
+    </p>
+    <div style="margin-top:12px;display:flex;gap:6px;">
+      <button id="viewPreTestStats" class="close" style="background:#183a42;color:#fff;">
+        View Detailed Analytics
+      </button>
+    </div>
+  `;
+
+  showModal("Pre-Test Complete", html);
+  
+  // Add event listener for the stats button
+  setTimeout(() => {
+    const viewStatsBtn = document.getElementById("viewPreTestStats");
+    if (viewStatsBtn) {
+      viewStatsBtn.addEventListener("click", () => {
+        showDetailedAnalytics("pre-test");
+      });
+    }
+  }, 100);
+}
+
+function showFinalResults(set) {
+  resetTimer();
+
+  const totalQuestions = set.questions.length;
+  const scorePct = Math.round((correctCount / totalQuestions) * 100);
+  const passed = scorePct >= (PASS_THRESHOLD * 100);
+
+  let elapsedSec = null;
+  if (quizStartTime) {
+    elapsedSec = Math.round((Date.now() - quizStartTime) / 1000);
+  }
+
+  // Save detailed analytics
+  const ident = qvGetIdentityForStats();
+  const analytics = {
+    email: ident.email || "",
+    name: ident.name || "",
+    sectionStats: { ...sectionStats },
+    paramStats: { ...paramStats },
+    totalQuestions: totalQuestions,
+    correctCount: correctCount,
+    scorePct: scorePct,
+    passed: passed,
+    timestamp: Date.now(),
+    elapsedSec: elapsedSec
+  };
+  saveDetailedAnalytics("final-boss", analytics);
+  
+  let shortHtml = `<p><strong>Overall Score:</strong> ${correctCount} / ${totalQuestions} (${scorePct}%)</p>`;
+
+  if (elapsedSec !== null) {
+    const mins = Math.floor(elapsedSec / 60);
+    const secs = elapsedSec % 60;
+    shortHtml += `<p><strong>Completion Time:</strong> ${mins}m ${secs}s</p>`;
+
+    try {
+      const key = "finalBossLastTime_" + currentCourseKey;
+      const prevRaw = localStorage.getItem(key);
+      let note = "";
+      if (prevRaw) {
+        const prev = parseInt(prevRaw, 10);
+        if (!Number.isNaN(prev)) {
+          const diff = prev - elapsedSec;
+          if (Math.abs(diff) >= 5) {
+            const abs = Math.abs(diff);
+            const dm = Math.floor(abs / 60);
+            const ds = abs % 60;
+            const pretty = `${dm > 0 ? dm + "m " : ""}${ds}s`;
+            if (diff > 0) {
+              note = `Nice! You finished ${pretty} faster than your previous run in this course.`;
+            } else {
+              note = `This run was ${pretty} slower than last time. Review calmly; speed will follow.`;
+            }
+          }
+        }
+      }
+      localStorage.setItem(key, String(elapsedSec));
+      if (note) shortHtml += `<p><em>${note}</em></p>`;
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // Pre vs Post comparison
+  const pre = getTestResult("pre");
+  if (pre && pre.total) {
+    const prePct = Math.round((pre.correct / pre.total) * 100);
+    const diffCorrect = correctCount - pre.correct;
+    const diffPct = scorePct - prePct;
+    const signQ = diffCorrect >= 0 ? "+" : "";
+    const signP = diffPct >= 0 ? "+" : "";
+
+    shortHtml += `
+      <p>
+        <strong>Pre vs Post-Test:</strong><br>
+        Pre-test: ${pre.correct} / ${pre.total} (${prePct}%)<br>
+        Post-test: ${correctCount} / ${totalQuestions} (${scorePct}%)<br>
+        Improvement: <strong>${signQ}${diffCorrect} questions (${signP}${diffPct}%)</strong>
+      </p>
+      <p style="font-size:11px;opacity:0.8;">
+        You can copy these numbers directly into your submission sheets to track progress. ✏️
+      </p>
+    `;
+  }
+
+  // Save to stats
+  saveQuizResult("final-boss", correctCount, totalQuestions, passed, elapsedSec);
+
+  // Full breakdown
+  let fullHtml = `<h4>Section Breakdown</h4><ul>`;
+  Object.entries(SECTION_CONFIG).forEach(([code, label]) => {
+    const stat = sectionStats[code] || { correct: 0, total: 0 };
+    const pct = stat.total
+      ? Math.round((stat.correct / stat.total) * 100)
+      : 0;
+    fullHtml += `<li><strong>${label}</strong>: ${stat.correct} / ${stat.total} correct (${pct}%)</li>`;
+  });
+  fullHtml += `</ul>`;
+
+  fullHtml += `<h4>Skill & Performance Metrics</h4><ul>`;
+  Object.entries(PARAM_CONFIG).forEach(([key, cfg]) => {
+    const stat = paramStats[key] || { correct: 0, total: 0 };
+    if (!stat.total) return;
+    const pct = Math.round((stat.correct / stat.total) * 100);
+    fullHtml += `<li><strong>${cfg.label}</strong>: ${stat.correct} / ${stat.total} correct (${pct}%)`;
+    if (pct < 70) {
+      fullHtml += `<br><span>${cfg.tip}</span>`;
+    }
+    fullHtml += `</li>`;
+  });
+  fullHtml += `</ul>`;
+
+  const html = `
+    <div id="resultsShort">${shortHtml}</div>
+    <div style="margin-top:12px;display:flex;gap:6px;">
+      <button id="toggleFullResultsBtn" class="close" style="background:#183a42;color:#fff;">
+        View full breakdown
+      </button>
+      <button id="viewPostTestStats" class="close" style="background:#2967d8;color:#fff;">
+        View Detailed Analytics
+      </button>
+    </div>
+    <div id="fullResults" style="display:none;margin-top:8px;">
+      ${fullHtml}
+    </div>
+  `;
+
+  showModal("Final Quiz Results", html);
+
+  // Add event listeners
+  setTimeout(() => {
+    const toggleBtn = document.getElementById("toggleFullResultsBtn");
+    const fullDiv = document.getElementById("fullResults");
+    const viewStatsBtn = document.getElementById("viewPostTestStats");
+    
+    if (toggleBtn && fullDiv) {
+      toggleBtn.addEventListener("click", () => {
+        const isHidden = fullDiv.style.display === "none";
+        fullDiv.style.display = isHidden ? "block" : "none";
+        toggleBtn.textContent = isHidden
+          ? "Hide full breakdown"
+          : "View full breakdown";
+      });
+    }
+    
+    if (viewStatsBtn) {
+      viewStatsBtn.addEventListener("click", () => {
+        showDetailedAnalytics("final-boss");
+      });
+    }
+  }, 100);
+}
+
+/* ========== MAP & PROGRESS ========== */
+function buildMapPositions() {
+  mapPositions = [];
+  if (overlayNodesWrap) overlayNodesWrap.innerHTML = "";
+
+  const set = currentSet();
+  const total = set && set.questions ? set.questions.length : 0;
+
+  if (!total || !mapTrackEl || !overlayTrack) {
+    if (mapMarkerEl) {
+      mapMarkerEl.style.transform = "translate(6px,28px)";
+    }
+    if (overlayMarker) {
+      overlayMarker.style.transform = "translate(0px,80px)";
+    }
+    if (overlayInfo) {
+      overlayInfo.textContent = "No quiz selected.";
+    }
+    if (mapSetLabel) {
+      mapSetLabel.textContent = "Set: none";
+    }
+    if (mapQLabel) {
+      mapQLabel.textContent = "Question: 0 / 0";
+    }
+    return;
+  }
+
+  const trackWidth = mapTrackEl.clientWidth - 26; // 13px radius + margins
+  const overlayWidth = overlayTrack.clientWidth - 16;
+
+  for (let i = 0; i < total; i++) {
+    const t = total <= 1 ? 0 : i / (total - 1);
+    const x = 6 + t * trackWidth;
+    const ox = 8 + t * overlayWidth;
+    mapPositions.push({ x, ox });
+
+    if (overlayNodesWrap) {
+      const node = document.createElement("div");
+      node.className = "overlay-node";
+      node.style.left = `${ox}px`;
+      node.style.top = "80px";
+      overlayNodesWrap.appendChild(node);
+    }
+  }
+
+  updateMapProgress();
+}
+
+function updateMapProgress() {
+  const set = currentSet();
+  const total = set && set.questions ? set.questions.length : 0;
+
+  if (mapSetLabel) {
+    mapSetLabel.textContent = set ? `Set: ${set.label}` : "Set: none";
+  }
+
+  const qNum = total ? Math.min(currentIndex + 1, total) : 0;
+  if (mapQLabel) {
+    mapQLabel.textContent = `Question: ${qNum} / ${total}`;
+  }
+
+  if (!total || !mapPositions.length) return;
+
+  const posIndex = Math.min(currentIndex, mapPositions.length - 1);
+  const pos = mapPositions[posIndex];
+
+  if (mapMarkerEl) {
+    mapMarkerEl.style.transform = `translate(${pos.x}px,28px)`;
+  }
+  if (overlayMarker) {
+    overlayMarker.style.transform = `translate(${pos.ox}px,80px)`;
+  }
+
+  if (overlayNodesWrap) {
+    const nodes = overlayNodesWrap.querySelectorAll(".overlay-node");
+    nodes.forEach((node, idx) => {
+      node.classList.toggle("visited", idx <= currentIndex);
+    });
+  }
+
+  if (overlayInfo) {
+    overlayInfo.textContent = `Question ${qNum} of ${total}`;
+  }
+}
+
+/* ========== QUIZ RENDERING & ANSWERS ========== */
+function renderQuestion() {
+  const set = currentSet();
+
+  if (!set || !set.questions || !set.questions.length) {
+    if (screenTitleEl) {
+      screenTitleEl.textContent =
+        "Select a lesson quiz on the left to begin. The timer will start automatically.";
+    }
+    if (questionTextEl) questionTextEl.textContent = "";
+    if (answersTextEl) answersTextEl.textContent = "";
+    letterPills.forEach(p => p && p.classList.remove("selected"));
+    selectedAnswer = 0;
+    updateMapProgress();
+    resetTimer();
+    quizEnded = false; // Reset quiz ended flag
+    return;
+  }
+
+  const total = set.questions.length;
+  if (currentIndex < 0) currentIndex = 0;
+  if (currentIndex >= total) currentIndex = total - 1;
+
+  const qObj = set.questions[currentIndex];
+  const qNum = currentIndex + 1;
+
+  if (screenTitleEl) screenTitleEl.textContent = set.label;
+  if (questionTextEl) questionTextEl.textContent = `Q${qNum}. ${qObj.q}`;
+
+  let answers = "";
+  qObj.options.forEach((opt, idx) => {
+    const letter = String.fromCharCode(65 + idx);
+    answers += `${letter}. ${opt}\n`;
+  });
+  if (answersTextEl) answersTextEl.textContent = answers;
+
+  if (selectedAnswer < 0) selectedAnswer = 0;
+  if (selectedAnswer >= qObj.options.length) selectedAnswer = 0;
+  selectAnswer(selectedAnswer);
+
+  updateMapProgress();
+  startTimerIfNeeded();
+}
+
+function selectAnswer(index) {
+  selectedAnswer = index;
+  letterPills.forEach((pill, idx) => {
+    if (!pill) return;
+    pill.classList.toggle("selected", idx === index);
+  });
+}
+
+function cycleAnswer() {
+  const set = currentSet();
+  if (!set) return;
+  const qObj = set.questions[currentIndex];
+  const totalOptions = qObj.options.length;
+  selectedAnswer = (selectedAnswer + 1) % totalOptions;
+  selectAnswer(selectedAnswer);
+}
+
+/* ========== ANIMATIONS ========== */
+function playCorrectAnimation() {
+  if (!finnHero || !jakeHero || !lichHero) return;
+
+  finnHero.classList.add("attack");
+  jakeHero.classList.add("attack");
+  lichHero.classList.add("hit");
+
+  setTimeout(() => {
+    finnHero.classList.remove("attack");
+    jakeHero.classList.remove("attack");
+    lichHero.classList.remove("hit");
+  }, 600);
+}
+
+function playWrongAnimation() {
+  if (!finnHero || !jakeHero || !lichHero) return;
+
+  lichHero.classList.add("attack");
+  finnHero.classList.add("hit");
+  jakeHero.classList.add("hit");
+
+  setTimeout(() => {
+    lichHero.classList.remove("attack");
+    finnHero.classList.remove("hit");
+    jakeHero.classList.remove("hit");
+  }, 600);
+}
+
+// Ensure characters come back whenever a new quiz/run starts.
+// End-of-quiz can mark Finn/Jake or the Lich as "defeated" / "dead".
+function resetCharacters() {
+  const clean = (el) => {
+    if (!el) return;
+    el.classList.remove("defeated", "dead", "hit", "attack");
+    // Defensive: some CSS patterns hide via inline style.
+    el.style.opacity = "";
+    el.style.visibility = "";
+    el.style.display = "";
+  };
+
+  clean(finnHero);
+  clean(jakeHero);
+  clean(lichHero);
+}
+
+/* ========== END OF QUIZ HANDLER ========== */
+function handleEndOfQuiz(set) {
+  const totalQuestions = set.questions.length;
+  const passed = (correctCount / totalQuestions) >= PASS_THRESHOLD;
+
+  // Capture time before resetTimer() wipes it
+  const timeTaken = timerSeconds;
+
+  // Set quiz ended flag
+  quizEnded = true;
+
+  // Character disappear logic
+  if (finnHero && jakeHero && lichHero) {
+    if (passed) {
+      // Passed → Lich disappears
+      lichHero.classList.add("defeated", "dead");
+      finnHero.classList.remove("defeated");
+      jakeHero.classList.remove("defeated");
+    } else {
+      // Failed → Finn & Jake disappear
+      finnHero.classList.add("defeated");
+      jakeHero.classList.add("defeated");
+      lichHero.classList.remove("defeated", "dead");
+    }
+  }
+
+  resetTimer();
+
+  if (currentSetKey === "pre-test") {
+    saveTestResult("pre", totalQuestions);
+    showPreTestResults(set);
+  } else if (currentSetKey === "final-boss") {
+    saveTestResult("post", totalQuestions);
+    showFinalResults(set);
+  } else {
+    // Save regular lesson results
+    saveQuizResult(currentSetKey, correctCount, totalQuestions, passed, timeTaken);
+
+    // Update leaderboard (best score per user per quiz)
+    qvUpsertLeaderboardEntry({
+      course: currentCourseKey,
+      setKey: currentSetKey,
+      score: correctCount,
+      total: totalQuestions,
+      passed: passed,
+      timeTaken: timeTaken
+    });
+
+    // Clear saved progress for this quiz once it ends
+    qvClearProgress({ course: currentCourseKey, setKey: currentSetKey });
+    
+    showModal(
+      "Quiz Complete",
+      `<p>You answered <strong>${correctCount}</strong> out of <strong>${totalQuestions}</strong> questions correctly.</p>`
+    );
+  }
+}
+
+/* ========== CHECK ANSWER WITH AUTO-NEXT ========== */
+function checkAnswer() {
+  // Check if quiz has already ended
+  if (quizEnded) {
+    showModal(
+      "Quiz Ended",
+      "<p>This quiz has already ended. Start a new quiz to continue playing.</p>"
+    );
+    return;
+  }
+
+  const set = currentSet();
+  if (!set) {
+    showModal(
+      "No quiz selected",
+      "<p>Select a lesson quiz from the left side first.</p>"
+    );
+    return;
+  }
+
+  const qObj = set.questions[currentIndex];
+  if (typeof qObj.correct === "undefined") {
+    showModal(
+      "No answer key",
+      "<p>This question doesn't have an answer key configured yet.</p>"
+    );
+    return;
+  }
+
+  const isCorrect = selectedAnswer === qObj.correct;
+  recordAnalytics(currentIndex, isCorrect);
+
+  if (isCorrect) {
+    correctCount++;
+    if (screenTitleEl) screenTitleEl.textContent = "Nice! Correct ✅";
+    playCorrectAnimation();
+  } else {
+    hearts = Math.max(0, hearts - 1);
+    updateHeartsDisplay();
+    if (screenTitleEl) {
+      screenTitleEl.textContent = "Not quite — moving on to the next one!";
+    }
+    playWrongAnimation();
+  }
+
+  // Save progress after each question so students can continue later
+  qvSaveProgress({
+    course: currentCourseKey,
+    setKey: currentSetKey,
+    currentIndex: currentIndex,
+    correctCount: correctCount,
+    hearts: hearts,
+    timerSeconds: timerSeconds
+  });
+
+  const lastIndex = set.questions.length - 1;
+  const atLastQuestion = currentIndex === lastIndex;
+
+  // Auto-next / end-of-quiz after animation
+  if (atLastQuestion) {
+    setTimeout(() => {
+      handleEndOfQuiz(set);
+    }, 900);
+  } else {
+    setTimeout(() => {
+      currentIndex++;
+      selectedAnswer = 0;
+      renderQuestion();
+    }, 900);
+  }
+}
+
+/* ========== COURSE & LESSONS ========== */
+function buildLessonList() {
+  if (!lessonListEl) return;
+  lessonListEl.innerHTML = "";
+  const course = COURSES[currentCourseKey];
+  if (!course || !course.lessons) return;
+
+  if (lessonsTitleEl) {
+    lessonsTitleEl.textContent = `${course.name} Lessons`;
+  }
+
+  let lessons = course.lessons;
+  const query = currentLessonFilter.trim().toLowerCase();
+  if (query) {
+    lessons = lessons.filter(lesson => {
+      if (lesson.title.toLowerCase().includes(query)) return true;
+      if (lesson.quizzes) {
+        return lesson.quizzes.some(q =>
+          q.label.toLowerCase().includes(query)
+        );
+      }
+      return false;
+    });
+  }
+
+  lessons.forEach(lesson => {
+    const group = document.createElement("div");
+    group.className = "activity-group";
+
+    const main = document.createElement("div");
+    main.className = "activity-main";
+    main.textContent = lesson.title;
+    group.appendChild(main);
+
+    if (lesson.quizzes && lesson.quizzes.length) {
+      const subtopics = document.createElement("div");
+      subtopics.className = "activity-subtopics";
+
+      const header = document.createElement("div");
+      header.className = "activity-subheader";
+      header.textContent = "▸ Quizzes";
+      subtopics.appendChild(header);
+
+      const sublist = document.createElement("div");
+      sublist.className = "activity-sublist";
+
+      lesson.quizzes.forEach(q => {
+        const btn = document.createElement("button");
+        btn.className = "activity-sub";
+        btn.dataset.set = q.key;
+        btn.textContent = q.label;
+        sublist.appendChild(btn);
+        btn.addEventListener("click", () => {
+          chooseSet(q.key);
+        });
+      });
+
+      subtopics.appendChild(sublist);
+      group.appendChild(subtopics);
+
+      main.addEventListener("click", () => {
+        group.classList.toggle("open");
+      });
+
+      header.addEventListener("click", () => {
+        header.classList.toggle("open");
+      });
+    }
+
+    lessonListEl.appendChild(group);
+  });
+}
+
+function chooseSet(setKey) {
+  const sets = getActiveSets();
+  const set = sets[setKey];
+  if (!set || !Array.isArray(set.questions) || !set.questions.length) {
+    showModal("Coming soon", "<p>This quiz set doesn't have questions yet.</p>");
+    return;
+  }
+
+  currentSetKey = setKey;
+
+  // If the previous quiz ended and hid characters, bring them back.
+  resetCharacters();
+
+  // If the student already started this quiz before, resume where they left off.
+  const saved = qvLoadProgress({ course: currentCourseKey, setKey });
+  if (saved && saved.inProgress) {
+    currentIndex = Math.min(Number(saved.currentIndex || 0), set.questions.length - 1);
+    correctCount = Number(saved.correctCount || 0);
+    hearts = Math.max(0, Number(saved.hearts || DEFAULT_HEARTS));
+    timerSeconds = Number(saved.timerSeconds || 0);
+  } else {
+    currentIndex = 0;
+    correctCount = 0;
+    hearts = DEFAULT_HEARTS;
+    timerSeconds = 0;
+  }
+
+  selectedAnswer = 0;
+  lichHealth = 3;
+  quizEnded = false; // Reset quiz ended flag when starting new set
+
+  updateHeartsDisplay();
+  // Don't wipe the saved time if we're resuming.
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  timerRunning = false;
+  updateTimerDisplay();
+  resetAnalyticsForSet(setKey);
+  buildMapPositions();
+  renderQuestion();
+}
+
+function changeCourse(key) {
+  if (!COURSES[key]) return;
+
+  currentCourseKey = key;
+  currentSetKey = null;
+  currentIndex = 0;
+  selectedAnswer = 0;
+  hearts = DEFAULT_HEARTS;
+  correctCount = 0;
+  lichHealth = 3;
+  quizEnded = false; // Reset quiz ended flag when changing course
+
+  // Switching courses should also restore any hidden characters.
+  resetCharacters();
+
+  updateCourseLabel();
+  updateHeartsDisplay();
+  resetTimer();
+  buildLessonList();
+  buildMapPositions();
+  renderQuestion();
+}
+
+/* ========== EVENT LISTENERS ========== */
+// Modal close (X + button)
+if (modalClose) {
+  modalClose.addEventListener("click", hideModal);
+}
+if (modalCloseX) {
+  modalCloseX.addEventListener("click", hideModal);
+}
+
+// Search bar
+if (lessonSearchEl) {
+  lessonSearchEl.addEventListener("input", () => {
+    currentLessonFilter = lessonSearchEl.value;
+    buildLessonList();
+  });
+}
+if (iconSearchEl) {
+  iconSearchEl.addEventListener("click", () => {
+    showModal(
+      "Search",
+      "<p>Type keywords in the search box to filter lessons and quizzes by name.</p>"
+    );
+    if (lessonSearchEl) {
+      lessonSearchEl.focus();
+      lessonSearchEl.select();
+    }
+  });
+}
+
+// Letter pills (A/B/C/D)
+letterPills.forEach((pill, idx) => {
+  if (!pill) return;
+  pill.addEventListener("click", () => selectAnswer(idx));
+});
+
+// Main buttons
+if (submitBtn) {
+  submitBtn.addEventListener("click", checkAnswer);
+}
+if (chooseBtn) {
+  chooseBtn.addEventListener("click", cycleAnswer);
+}
+if (musicBtn) {
+  musicBtn.addEventListener("click", toggleMusic);
+}
+if (hintBtn) {
+  hintBtn.addEventListener("click", () => {
+    const set = currentSet();
+    if (!set) {
+      showModal(
+        "Hint",
+        "<p>Select a quiz first so I can give you a hint for a specific question.</p>"
+      );
+      return;
+    }
+    const qObj = set.questions[currentIndex];
+    if (qObj.hint) {
+      showModal("Hint", `<p>${qObj.hint}</p>`);
+    } else {
+      showModal(
+        "Hint",
+        "<p>No specific hint for this one — try eliminating obviously wrong answers.</p>"
+      );
+    }
+  });
+}
+if (resourcesBtn) {
+  resourcesBtn.addEventListener("click", () => {
+    // Go to the Resources shelf page
+    window.location.href = "hsh.html";
+  });
+}
+if (viewStatsBtn) { // CHANGED: from statsBtn to viewStatsBtn
+  viewStatsBtn.addEventListener("click", showAllStatsView);
+}
+if (coursesBtn) {
+  coursesBtn.addEventListener("click", () => {
+    let html = "<p>Select a course (language):</p><div>";
+    Object.values(COURSES).forEach(course => {
+      html += `<button class="course-select-btn" data-course="${course.id}">• ${course.name}</button>`;
+    });
+    html += "</div><p style='margin-top:6px;font-size:10px;'>Switching course will reset your current run.</p>";
+    showModal("Courses", html);
+
+    modalBody.querySelectorAll(".course-select-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.course;
+        changeCourse(key);
+        hideModal();
+      });
+    });
+  });
+}
+
+// Map overlay
+if (mapCardEl && mapOverlay) {
+  mapCardEl.addEventListener("click", () => {
+    mapOverlay.classList.add("show");
+  });
+}
+if (overlayClose && mapOverlay) {
+  overlayClose.addEventListener("click", () => {
+    mapOverlay.classList.remove("show");
+  });
+}
+
+// Keyboard shortcuts
+document.addEventListener("keydown", e => {
+  if (e.key === "a" || e.key === "A") selectAnswer(0);
+  if (e.key === "b" || e.key === "B") selectAnswer(1);
+  if (e.key === "c" || e.key === "C") selectAnswer(2);
+  if (e.key === "d" || e.key === "D") selectAnswer(3);
+  if (e.key === " ") {
+    e.preventDefault();
+    cycleAnswer();
+  }
+  if (e.key === "Enter") {
+    checkAnswer();
+  }
+});
+
+// Window resize → recalc map positions
+window.addEventListener("resize", () => {
+  if (currentSetKey) {
+    buildMapPositions();
+  }
+});
+
+// Simple nav buttons
+if (homeBtn) {
+  homeBtn.addEventListener("click", () => {
+    // Return to the main Dashboard
+    window.location.href = "dashboard.html";
+  });
+}
+if (continueBtn) {
+  continueBtn.addEventListener("click", () => {
+    const set = currentSet();
+    if (!set) {
+      showModal(
+        "Continue",
+        "<p>No active quiz yet. Pick any lesson from the left to begin.</p>"
+      );
+      return;
+    }
+    renderQuestion();
+    showModal("Continue", "<p>Picking up where you left off.</p>");
+  });
+}
+if (newSaveBtn) {
+  newSaveBtn.addEventListener("click", () => {
+    correctCount = 0;
+    hearts = DEFAULT_HEARTS;
+    lichHealth = 3;
+    quizEnded = false; // Reset quiz ended flag
+    resetCharacters();
+    updateHeartsDisplay();
+    resetTimer();
+    const set = currentSet();
+    if (set) {
+      currentIndex = 0;
+      renderQuestion();
+    }
+    showModal(
+      "New Save",
+      "<p>New run started for the current course. Your previous score was cleared.</p>"
+    );
+  });
+}
+if (settingsBtn) {
+  settingsBtn.addEventListener("click", () => {
+    showModal(
+      "Settings",
+      "<p>You can plug real settings here later (sound, difficulty, etc.).</p>"
+    );
+  });
+}
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    // Proper logout (clears session) + redirect to login
+    if (typeof qvLogout === "function") qvLogout();
+    window.location.href = "login.html";
+  });
+}
+if (leaderboardBtn) {
+  leaderboardBtn.addEventListener("click", () => {
+    window.location.href = "leader.html";
+  });
+}
+
+// Course page nav
+if (javaPageBtn) {
+  javaPageBtn.addEventListener("click", () => {
+    window.location.href = "java-course.html";
+  });
+}
+if (htmlPageBtn) {
+  htmlPageBtn.addEventListener("click", () => {
+    window.location.href = "html-course.html";
+  });
+}
+if (cssPageBtn) {
+  cssPageBtn.addEventListener("click", () => {
+    window.location.href = "css-course.html";
+  });
+}
+if (jsPageBtn) {
+  jsPageBtn.addEventListener("click", () => {
+    window.location.href = "js-course.html";
+  });
+}
+if (pythonPageBtn) {
+  pythonPageBtn.addEventListener("click", () => {
+    window.location.href = "python-course.html";
+  });
+}
+
+/* ===== INITIAL BOOT ===== */
+initBackgroundMusic();
+loadMusicPreference();
+updateCourseLabel();
+buildLessonList();
+buildMapPositions();
+renderQuestion();
+updateHeartsDisplay();
+</script>
+
+</body>
+</html>

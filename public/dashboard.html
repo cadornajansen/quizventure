@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Quizenture Time</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #00A8B5;
+      font-family: 'Press Start 2P', sans-serif;
+      color: white;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background: #B0391B;
+      border-bottom: 4px solid #000;
+      box-shadow: 0 4px #000;
+    }
+
+    .logo {
+      font-size: 18px;
+      text-shadow: 3px 3px #000;
+      margin: 0;
+    }
+
+    .logout {
+      background: #F9B233;
+      border: 3px solid #000;
+      box-shadow: 3px 3px #000;
+      padding: 12px 20px;
+      font-size: 12px;
+      font-family: 'Press Start 2P', sans-serif;
+      cursor: pointer;
+    }
+
+    .logout:hover {
+      transform: translateY(-3px);
+      transition: 0.2s;
+    }
+
+    .content {
+      padding: 30px;
+      text-align: center;
+    }
+
+    .welcome {
+      color: #F9F9F9;
+      margin-bottom: 14px;
+      text-shadow: 3px 3px #000;
+      font-size: 18px;
+    }
+
+    .saved {
+      font-size: 10px;
+      margin: 0 0 30px 0;
+      text-shadow: 2px 2px #000;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .card {
+      background: #F9B233;
+      width: 80%;
+      max-width: 350px;
+      padding: 20px;
+      border: 4px solid #000;
+      box-shadow: 5px 5px #000;
+      cursor: pointer;
+      border-radius: 10px;
+      color: #000;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      transition: 0.2s;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 10px;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top bar -->
+  <div class="top-bar">
+    <h1 class="logo">QUIZVENTURE TIME</h1>
+    <button class="logout" type="button">Log Out</button>
+  </div>
+
+  <!-- Dashboard content -->
+  <div class="content">
+    <h2 class="welcome" id="welcome">Welcome Back, Adventurer!</h2>
+    <p class="saved" id="savedInfo" aria-live="polite"></p>
+
+    <div class="cards">
+      <div class="card" onclick="window.location.href='lesson.html'">
+        <h3>Lessons</h3>
+        <p>Start learning HTML, CSS, Java, Python and more!</p>
+      </div>
+
+      <div class="card" onclick="location.href='bimo.html'">
+        <h3>Quizzes</h3>
+        <p>Test your coding knowledge!</p>
+      </div>
+
+      <div class="card" onclick="location.href='developers.html'">
+        <h3>Developers</h3>
+        <p>Discover the creators of Quizenture Time!</p>
+      </div>
+
+      <div class="card" onclick="location.href='aboutpage.html'">
+        <h3>About Page</h3>
+        <p>Learn more about Quizenture Time.</p>
+      </div>
+
+      <div class="card" onclick="location.href='contact.html'">
+        <h3>Contact</h3>
+        <p>Get in touch with us!</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/auth.js"></script>
+  <script>
+    // Protect this page: if not logged in, send to login page
+    qvRequireAuth({ redirectTo: 'login.html' });
+
+    // Show saved user info
+    const user = qvGetCurrentUser();
+    if (user) {
+      document.getElementById('welcome').textContent = 'Welcome Back, ' + user.name + '!';
+      document.getElementById('savedInfo').textContent = 'Saved: ' + user.name + ' (' + user.email + ')';
+    }
+
+    // Log out
+    document.querySelector('.logout').addEventListener('click', function () {
+      qvLogout();
+      location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
+

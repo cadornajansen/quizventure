@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 8: OOP Principles in Action | Quizventure Time</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Dive into OOP principles with hands-on Java examples! Learn classes, inheritance, and more.">
+
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* Global Styles */
+body {
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(135deg, #9ddcff 0%, #eaf7ff 50%, #ffd400 100%);
+  background-attachment: fixed;
+  margin: 0;
+  color: #333;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+    :root {
+  --bg-sky: #9ad0f5;
+  --ui-primary: #2c3e50;
+  --accent: #ffd54f;
+  --white: #ffffff;
+  --link: #00d4ff;
+  --shadow: rgba(0,0,0,0.35);
+}
+
+   .nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--ui-primary);
+  border-bottom: 4px solid #0f141b;
+  box-shadow: 0 4px 0 #0f141b;
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  text-shadow: 0 2px 0 #8a6f00;
+}
+.brand img {
+  width: 28px; height: 28px;
+}
+.nav-links {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+}
+.nav-links a {
+  padding: 8px 12px;
+  color: #e6f3ff;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border: 3px solid #0f141b;
+  background: #243a52;
+  box-shadow: 0 3px 0 #0f141b;
+}
+.nav-links a:hover {
+  filter: brightness(1.1);
+}
+.nav-links a.active {
+  background: #345474;
+  color: var(--accent);
+}
+
+/* Title */
+.title {
+  background: linear-gradient(45deg, #4aaef2, #55b6ff);
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 24px;
+  border-bottom: 6px solid black;
+  text-shadow: 2px 2px 0px #000;
+  transition: all 0.3s ease;
+}
+.title:hover {
+  letter-spacing: 3px;
+  transform: scale(1.02);
+}
+
+/* Progress Bar */
+.progress {
+  max-width: 1100px;
+  margin: 20px auto;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 20px;
+}
+.progress-bar {
+  background: linear-gradient(90deg, #ffd400, #ff6b35);
+  width: 80%; /* Progress for Lesson 8 */
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+/* Lesson Content */
+.lesson-content {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #c97b1d, #ff8c42);
+  border: 6px solid black;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.lesson-content h1 {
+  font-size: 20px;
+  color: #ffd400;
+  text-shadow: 1px 1px 0px #000;
+  margin-bottom: 20px;
+}
+
+.lesson-content h2 {
+  font-size: 16px;
+  color: #55b6ff;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.lesson-content p, .lesson-content ul {
+  font-size: 12px;
+  color: white;
+  margin: 10px 0;
+}
+.lesson-content ul {
+  padding-left: 20px;
+}
+.lesson-content li {
+  margin-bottom: 5px;
+}
+
+/* Summary Box */
+.summary {
+  background: linear-gradient(135deg, #43a6f0, #55b6ff);
+  border: 4px solid black;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  color: white;
+}
+.summary h3 {
+  font-size: 14px;
+  color: #ffd400;
+  margin-bottom: 10px;
+}
+
+/* Code Blocks */
+pre {
+  background: linear-gradient(135deg, #1e2a44, #2a3a5c);
+  color: #e0e0e0;
+  padding: 20px;
+  border: 4px solid black;
+  border-radius: 8px;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+pre:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(255,212,0,0.7), inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Navigation */
+.navigation {
+  text-align: center;
+  margin-top: 40px;
+}
+.navigation a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 15px;
+  padding: 10px 15px;
+  background: #1e1e1e;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+.navigation a:hover {
+  background: #ffd400;
+  color: black;
+  transform: translateY(-3px);
+}
+
+/* Footer */
+.footer {
+  background: #1e1e1e;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top: 4px solid #ffd400;
+}
+.footer a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Print Styles */
+@media print {
+  .navbar, .progress, .footer, .navigation {
+    display: none;
+  }
+  .lesson-content {
+    background: white;
+    border: none;
+    padding: 20px;
+    margin: 0;
+    color: black;
+  }
+  .summary {
+    background: #f4f4f4;
+    border: 1px solid #333;
+    color: black;
+  }
+  pre {
+    background: #f4f4f4;
+    color: black;
+    border: 1px solid #333;
+  }
+}
+
+@media screen and (max-width: 767px) {
+body {
+  background: url('respobg1.gif') no-repeat center center; 
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.nav-links {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.nav-links a {
+  flex: 1;
+  text-align: center;
+  display: flex;              /* ✅ icon + text side by side */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.nav-links a img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated; /* crisp retro look */
+}
+}
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .nav-links a img {
+    width: 14px;
+    height: 14px;
+  }
+}
+</style>
+  <script src="../js/auth.js"></script>
+</head>
+
+<body>
+  <script>qvRequireAuth({ redirectTo: "login.html" });</script>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="logo.png" alt="Quizventure brand" />
+        <span>Quizventure Time</span>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html">HOME</a>
+      <a href="bimo.html">QUIZ</a>
+      <a href="leader.html">LEADERBOARD</a>
+      <a href="aboutpage.html">ABOUT</a>
+      <a href="developers.html">Developers</a>
+      <a href="contact.html">CONTACT</a>
+      <a href="hsh.html">RESOURCES</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="title">LESSON 8: OOP PRINCIPLES IN ACTION</div>
+
+<div class="progress">
+  <div class="progress-bar"></div>
+</div>
+
+<main class="lesson-content">
+  <div class="summary">
+    <h3>Lesson Summary</h3>
+    <p>In this lesson, you'll dive into Object-Oriented Programming (OOP) principles in action. OOP is a programming paradigm that uses objects and classes to model real-world entities. We'll focus on key principles like classes defining behavior, inheritance allowing subclasses to build on parent classes, and polymorphism for flexible method calls. Through Java code examples, you'll learn to create objects, call methods, and simulate fun scenarios like a pet adventure. By the end, you'll understand how OOP promotes code reusability, modularity, and maintainability.</p>
+  </div>
+
+  <h1>Lesson 8: OOP Principles in Action</h1>
+  <p>Object-Oriented Programming (OOP) is all about organizing code into reusable blueprints called classes. Classes define the behavior and properties of objects, and inheritance lets subclasses inherit and extend that behavior. This makes your code more structured, like building a family tree of code! Let's see OOP in action with Java examples.</p>
+
+  <h2>Key OOP Principles</h2>
+  <p>OOP revolves around four main principles: Encapsulation, Inheritance, Polymorphism, and Abstraction. We'll highlight inheritance and classes here, as they form the core of our examples.</p>
+  <ul>
+    <li><strong>Classes:</strong> Blueprints for objects. They define attributes (fields) and behaviors (methods). For example, an Animal class can have an eat() method.</li>
+    <li><strong>Inheritance:</strong> Allows a subclass to inherit properties and methods from a parent class. A Dog can inherit from Animal and add its own bark() method.</li>
+    <li><strong>Polymorphism:</strong> Means "many forms." It lets you treat subclasses as their parent type, enabling flexible code (e.g., calling eat() on any Animal).</li>
+    <li><strong>Encapsulation:</strong> Hides internal details, exposing only what's necessary through methods.</li>
+  </ul>
+  <p><em>Fun Fact:</em> OOP is like a video game—classes are character templates, objects are instances (like your hero), and inheritance lets you create specialized versions (like a wizard subclass of adventurer)!</p>
+
+  <h2>Basic Example: Animal and Dog Classes</h2>
+  <p>Here's a simple example showing classes and inheritance. The Animal class defines a basic eat() method. The Dog class extends Animal, inheriting eat(), and adds its own bark() method.</p>
+  <pre>
+class Animal {
+  void eat() {
+    System.out.println("Nom nom!");
+  }
+}
+
+class Dog extends Animal {
+  void bark() {
+    System.out.println("Woof!");
+  }
+}
+  </pre>
+
+  <h2>Creating Objects and Simulating a Pet Adventure</h2>
+  <p>To bring this to life, create a Dog object and call its methods. This simulates a pet adventure where your dog eats and barks!</p>
+  <pre>
+public class PetAdventure {
+  public static void main(String[] args) {
+    Dog myDog = new Dog();  // Create a Dog object
+    myDog.eat();            // Inherited method: Nom nom!
+    myDog.bark();           // Dog-specific method: Woof!
+    
+    // Simulate adventure: Dog explores, eats, and alerts!
+    System.out.println("Your dog is on an adventure!");
+    myDog.eat();
+    myDog.bark();
+    System.out.println("Adventure complete!");
+  }
+}
+// Output:
+// Nom nom!
+// Woof!
+// Your dog is on an adventure!
+// Nom nom!
+// Woof!
+// Adventure complete!
+  </pre>
+
+  <h2>Polymorphism in Action</h2>
+  <p>Polymorphism lets you use a parent reference for a child object. For example, treat a Dog as an Animal.</p>
+  <pre>
+Animal myPet = new Dog();  // Polymorphism: Dog is an Animal
+myPet.eat();               // Calls Animal's eat(): Nom nom!
+// myPet.bark();           // Error: Animal doesn't have bark()
+  </pre>
+
+  <h2>Try It Yourself: OOP Exercises</h2>
+  <p>Experiment with these code snippets in your Java environment (e.g., using an IDE like Eclipse or online compilers).</p>
+  <h3>Exercise 1: Create and Extend Classes</h3>
+  <pre>
+class Vehicle {
+  void move() {
+    System.out.println("Moving forward!");
+  }
+}
+
+class Car extends Vehicle {
+  void honk() {
+    System.out.println("Honk honk!");
+  }
+}
+
+public class VehicleDemo {
+  public static void main(String[] args) {
+    Car myCar = new Car();
+    myCar.move();  // Inherited: Moving forward!
+    myCar.honk();  // Car-specific: Honk honk!
+  }
+}
+// Output:
+// Moving forward!
+// Honk honk!
+  </pre>
+
+  <h3>Exercise 2: Polymorphism with Animals</h3>
+  <pre>
+class Cat extends Animal {
+  void meow() {
+    System.out.println("Meow!");
+  }
+}
+
+public class AnimalDemo {
+  public static void main(String[] args) {
+    Animal dog = new Dog();
+    Animal cat = new Cat();
+    
+    dog.eat();  // Nom nom!
+    cat.eat();  // Nom nom!
+    
+    // Specific actions
+    ((Dog) dog).bark();  // Woof! (casting back)
+    ((Cat) cat).meow();  // Meow!
+  }
+}
+// Output:
+// Nom nom!
+// Nom nom!
+// Woof!
+// Meow!
+  </pre>
+
+  <h2>Common Pitfalls and Tips</h2>
+  <p>Remember, subclasses inherit public and protected members, but not private ones. Use super() to call parent constructors. Avoid deep inheritance hierarchies to keep code simple. Practice by modeling real-world things like games or apps!</p>
+  <p><em>Pro Tip:</em> In game development, use inheritance for characters (e.g., Player extends Character), and polymorphism for actions (e.g., attack() method varies by type).</p>
+
+  <div class="navigation">
+    <a href="lesson7.html"><i class="fas fa-arrow-left"></i> Previous: Lesson 7</a>
+    <a href="ok.html"><i class="fas fa-home"></i> Back to Lessons</a>
+    <a href="lesson9.html">Next: Lesson 9 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Ready to test your skills? Jump into the <a href="bimo.html">QUIZ</a> and climb the <a href="#">LEADERBOARD</a>! 🚀</p>
+  <p>&copy; 2026 Quizventure Time. Code your way to victory!</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 6: Switch & Ternary Operator in Java | Quizventure Time</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Learn switch statements and ternary operators in Java with examples!">
+
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* Global Styles */
+body {
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(135deg, #9ddcff 0%, #eaf7ff 50%, #ffd400 100%);
+  background-attachment: fixed;
+  margin: 0;
+  color: #333;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+    :root {
+  --bg-sky: #9ad0f5;
+  --ui-primary: #2c3e50;
+  --accent: #ffd54f;
+  --white: #ffffff;
+  --link: #00d4ff;
+  --shadow: rgba(0,0,0,0.35);
+}
+
+   .nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--ui-primary);
+  border-bottom: 4px solid #0f141b;
+  box-shadow: 0 4px 0 #0f141b;
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  text-shadow: 0 2px 0 #8a6f00;
+}
+.brand img {
+  width: 28px; height: 28px;
+}
+.nav-links {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+}
+.nav-links a {
+  padding: 8px 12px;
+  color: #e6f3ff;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border: 3px solid #0f141b;
+  background: #243a52;
+  box-shadow: 0 3px 0 #0f141b;
+}
+.nav-links a:hover {
+  filter: brightness(1.1);
+}
+.nav-links a.active {
+  background: #345474;
+  color: var(--accent);
+}
+/* Title */
+.title {
+  background: linear-gradient(45deg, #4aaef2, #55b6ff);
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 24px;
+  border-bottom: 6px solid black;
+  text-shadow: 2px 2px 0px #000;
+  transition: all 0.3s ease;
+}
+.title:hover {
+  letter-spacing: 3px;
+  transform: scale(1.02);
+}
+
+/* Progress Bar */
+.progress {
+  max-width: 1100px;
+  margin: 20px auto;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 20px;
+}
+.progress-bar {
+  background: linear-gradient(90deg, #ffd400, #ff6b35);
+  width: 66%; /* Progress for Lesson 6 */
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+/* Lesson Content */
+.lesson-content {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #c97b1d, #ff8c42);
+  border: 6px solid black;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.lesson-content h1 {
+  font-size: 20px;
+  color: #ffd400;
+  text-shadow: 1px 1px 0px #000;
+  margin-bottom: 20px;
+}
+
+.lesson-content h2 {
+  font-size: 16px;
+  color: #55b6ff;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.lesson-content p, .lesson-content ul {
+  font-size: 12px;
+  color: white;
+  margin: 10px 0;
+}
+.lesson-content ul {
+  padding-left: 20px;
+}
+.lesson-content li {
+  margin-bottom: 5px;
+}
+
+/* Summary Box */
+.summary {
+  background: linear-gradient(135deg, #43a6f0, #55b6ff);
+  border: 4px solid black;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  color: white;
+}
+.summary h3 {
+  font-size: 14px;
+  color: #ffd400;
+  margin-bottom: 10px;
+}
+
+/* Code Blocks */
+pre {
+  background: linear-gradient(135deg, #1e2a44, #2a3a5c);
+  color: #e0e0e0;
+  padding: 20px;
+  border: 4px solid black;
+  border-radius: 8px;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+pre:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(255,212,0,0.7), inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Navigation */
+.navigation {
+  text-align: center;
+  margin-top: 40px;
+}
+.navigation a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 15px;
+  padding: 10px 15px;
+  background: #1e1e1e;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+.navigation a:hover {
+  background: #ffd400;
+  color: black;
+  transform: translateY(-3px);
+}
+
+/* Footer */
+.footer {
+  background: #1e1e1e;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top: 4px solid #ffd400;
+}
+.footer a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Print Styles */
+@media print {
+  .navbar, .progress, .footer, .navigation {
+    display: none;
+  }
+  .lesson-content {
+    background: white;
+    border: none;
+    padding: 20px;
+    margin: 0;
+    color: black;
+  }
+  .summary {
+    background: #f4f4f4;
+    border: 1px solid #333;
+    color: black;
+  }
+  pre {
+    background: #f4f4f4;
+    color: black;
+    border: 1px solid #333;
+  }
+}
+
+@media screen and (max-width: 767px) {
+body {
+  background: url('respobg1.gif') no-repeat center center; 
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.nav-links {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.nav-links a {
+  flex: 1;
+  text-align: center;
+  display: flex;              /* ✅ icon + text side by side */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.nav-links a img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated; /* crisp retro look */
+}
+}
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .nav-links a img {
+    width: 14px;
+    height: 14px;
+  }
+}
+</style>
+  <script src="../js/auth.js"></script>
+</head>
+
+<body>
+  <script>qvRequireAuth({ redirectTo: "login.html" });</script>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="logo.png" alt="Quizventure brand" />
+        <span>Quizventure Time</span>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html">HOME</a>
+      <a href="bimo.html">QUIZ</a>
+      <a href="leader.html">LEADERBOARD</a>
+      <a href="aboutpage.html">ABOUT</a>
+      <a href="developers.html">Developers</a>
+      <a href="contact.html">CONTACT</a>
+      <a href="hsh.html">RESOURCES</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="title">LESSON 6: SWITCH & TERNARY OPERATOR</div>
+
+<div class="progress">
+  <div class="progress-bar"></div>
+</div>
+
+<main class="lesson-content">
+  <div class="summary">
+    <h3>Lesson Summary</h3>
+    <p>Switches handle multiple choices efficiently, while the ternary operator is a shorthand for simple if-else. This lesson covers switch statements for fixed values (with cases, break, and default), and the ternary operator (?) for concise conditionals. You'll learn when to use each, their syntax, and how they compare to if-else chains. Examples and exercises will help you apply them in game logic, menus, or quick decisions.</p>
+  </div>
+
+  <h1>Lesson 6: Switch & Ternary Operator</h1>
+  <p>Switches handle multiple choices efficiently, while the ternary operator is a shorthand for simple if-else. They provide alternatives to long if-else chains, improving readability and performance. Switches work best with discrete values, while ternaries are for quick assignments.</p>
+
+  <h2>Switch Statement</h2>
+  <p>Evaluates an expression and matches it to cases. Use break to exit; default handles unmatched values.</p>
+  <pre>
+switch (expression) {
+  case value1:
+    // Code
+    break;
+  case value2:
+    // Code
+    break;
+  default:
+    // Default code
+}
+  </pre>
+  <p>Supports int, char, String (Java 7+), and enums. No fall-through without break.</p>
+
+  <h2>Ternary Operator</h2>
+  <p>Shorthand for if-else: condition ? trueValue : falseValue. Returns a value, not executes code.</p>
+  <pre>
+variable = (condition) ? valueIfTrue : valueIfFalse;
+  </pre>
+  <p>Great for assignments; avoid nesting for clarity.</p>
+
+  <h2>When to Use Each</h2>
+  <ul>
+    <li>Switch: Multiple fixed options (e.g., menu selections).</li>
+    <li>Ternary: Simple conditionals in assignments.</li>
+  </ul>
+  <p><em>Power-Up:</em> Use switches for menu selections in games!</p>
+
+  <h2>Examples and Code Snippets</h2>
+  <p>Practical uses.</p>
+  <pre>
+// Ternary example
+int max = (a > b) ? a : b;
+
+// Switch example
+switch (day) {
+  case 1: System.out.println("Monday"); break;
+  default: System.out.println("Another day");
+}
+  </pre>
+
+  <h2>Try It Yourself: Switch & Ternary Exercises</h2>
+  <p>Experiment with these.</p>
+  <h3>Exercise 1: Switch Statement</h3>
+  <pre>
+public class SwitchDemo {
+  public static void main(String[] args) {
+    int level = 2;
+
+    switch (level) {
+      case 1:
+        System.out.println("Beginner level");
+        break;
+      case 2:
+        System.out.println("Intermediate level");
+        break;
+      case 3:
+        System.out.println("Advanced level");
+        break;
+      default:
+        System.out.println("Unknown level");
+    }
+
+    // String switch (Java 7+)
+    String fruit = "apple";
+    switch (fruit) {
+      case "apple":
+        System.out.println("Red fruit");
+        break;
+      case "banana":
+        System.out.println("Yellow fruit");
+        break;
+      default:
+        System.out.println("Other fruit");
+    }
+  }
+}
+// Output:
+// Intermediate level
+// Red fruit
+  </pre>
+
+  <h3>Exercise 2: Ternary Operator</h3>
+  <pre>
+public class TernaryDemo {
+  public static void main(String[] args) {
+    int score = 85;
+    String result = (score >= 60) ? "Pass" : "Fail";
+    System.out.println("Result: " + result);
+
+    // Nested ternary (use sparingly)
+    int num = 10;
+    String desc = (num > 0) ? "Positive" : (num < 0) ? "Negative" : "Zero";
+    System.out.println("Number is: " + desc);
+
+    // In assignment
+    double discount = (score > 90) ? 0.1 : 0.05;
+    System.out.println("Discount: " + (discount * 100) + "%");
+  }
+}
+// Output:
+// Result: Pass
+// Number is: Positive
+// Discount: 5.0%
+  </pre>
+
+  <h2>Common Pitfalls and Tips</h2>
+  <p>Forget break in switches causes fall-through. Ternaries can be hard to read if complex. Test all cases. In games, switches handle character classes or item types.</p>
+  <p><em>Pro Tip:</em> Prefer switches over long if-else for performance on many options.</p>
+
+  <div class="navigation">
+    <a href="lesson5.html"><i class="fas fa-arrow-left"></i> Previous: Lesson 5</a>
+    <a href="ok.html"><i class="fas fa-home"></i> Back to Lessons</a>
+    <a href="lesson7.html">Next: Lesson 7 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Ready to test your skills? Jump into the <a href="bimo.html">QUIZ</a> and climb the <a href="#">LEADERBOARD</a>! 🚀</p>
+  <p>&copy; 2026 Quizventure Time. Code your way to victory!</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java Learning World</title>
+  <!-- Pixel game font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/lesson.css">
+  
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      background: url('bglessons.png');
+      background-size: 100% 100%;
+    }
+
+       :root {
+  --bg-sky: #9ad0f5;
+  --ui-primary: #2c3e50;
+  --accent: #ffd54f;
+  --white: #ffffff;
+  --link: #00d4ff;
+  --shadow: rgba(0,0,0,0.35);
+}
+
+   .nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--ui-primary);
+  border-bottom: 4px solid #0f141b;
+  box-shadow: 0 4px 0 #0f141b;
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  text-shadow: 0 2px 0 #8a6f00;
+}
+.brand img {
+  width: 28px; height: 28px;
+}
+.nav-links {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+}
+.nav-links a {
+  padding: 8px 12px;
+  color: #e6f3ff;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border: 3px solid #0f141b;
+  background: #243a52;
+  box-shadow: 0 3px 0 #0f141b;
+}
+.nav-links a:hover {
+  filter: brightness(1.1);
+}
+.nav-links a.active {
+  background: #345474;
+  color: var(--accent);
+}
+
+    .ribbon {
+      text-align: center;
+      font-size: 22px;
+      margin-top: .4rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.2rem;
+    }
+
+    .card {
+      background: #d8830a;
+      border: 6px solid #000;
+      border-radius: 22px;
+      padding: 1.2rem 1.4rem;
+      color: #fff;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 8px 0 #000;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    h2 {
+      margin: 0 0 .7rem 0;
+      color: #0a2e98;
+      font-size: 18px;
+    }
+
+    p {
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    ul { list-style: none; margin: 0; padding: 0; }
+
+    .lesson-link {
+      padding: .7rem .8rem;
+      margin-bottom: .45rem;
+      background: rgba(0,0,0,.18);
+      border-radius: 12px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: .15s;
+      display: block;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .lesson-link:hover { 
+      background: rgba(0,0,0,.28); 
+      transform: translateY(-2px); 
+    }
+
+    .tips li { font-size: 10px; margin-bottom: .8rem; }
+
+    /* LESSON SCREEN */
+    .lesson-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: rgba(0,0,0,.55);
+      place-items: center;
+      padding: 1rem;
+    }
+
+    .lesson-box {
+      background: #fff7e1;
+      border: 6px solid #000;
+      border-radius: 22px;
+      box-shadow: 0 10px 0 #000;
+      padding: 1.2rem 1.4rem;
+      max-width: 540px;
+      width: 100%;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .lesson-box h3 {
+      margin-top: 0;
+    }
+
+    .close-btn, .start-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      background: #ffb703;
+      padding: .5rem .8rem;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .start-btn {
+      margin-left: .5rem;
+    }
+    @media screen and (max-width: 767px) {
+body {
+  background: url('respobg1.gif') no-repeat center center; 
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.nav-links {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.nav-links a {
+  flex: 1;
+  text-align: center;
+  display: flex;              /* ✅ icon + text side by side */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.nav-links a img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated; /* crisp retro look */
+}
+}
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .nav-links a img {
+    width: 14px;
+    height: 14px;
+  }
+}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="logo.png" alt="Quizventure brand" />
+        <span>Quizventure Time</span>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html">HOME</a>
+      <a href="bimo.html">QUIZ</a>
+      <a href="leader.html">LEADERBOARD</a>
+      <a href="aboutpage.html">ABOUT</a>
+      <a href="developers.html">Developers</a>
+      <a href="contact.html">CONTACT</a>
+      <a href="hsh.html">RESOURCES</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="ribbon">JAVA</div>
+
+<div class="container">
+  <div class="card">
+    <h2>OVERVIEW</h2>
+    <p>
+      History: Created by James Gosling at Sun Microsystems in 1995<br>
+      Uses: Android apps, enterprise software, web applications<br>
+      Difficulty: Medium
+    </p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>LESSONS</h2>
+      <ul>
+        <li class="lesson-link" data-title="Lesson 1: Variables" data-text="Learn about variables in Java—the named containers that store data for your programs." data-file="lessonone.html">Lesson 1: Variables</li>
+        <li class="lesson-link" data-title="Lesson 2: Data Types" data-text="Learn about Java's data types, which are essential for storing different kinds of information in your programs." data-file="lesson2.html">Lesson 2: Data Types</li>
+        <li class="lesson-link" data-title="Lesson 3: Initializing Variables" data-text="This lesson dives into declaring and initializing variables in Java, building on the basics of variables." data-file="lesson3.html">Lesson 3: Initializing Variables</li>
+        <li class="lesson-link" data-title="Lesson 4: Control Flow" data-text="Control flow decides what happens next based on conditions." data-file="lesson4.html">Lesson 4: Control Flow</li>
+        <li class="lesson-link" data-title="Lesson 5: Conditional Statements" data-text="If statements check conditions and execute code accordingly." data-file="lesson5.html">Lesson 5: Conditional Statements</li>
+        <li class="lesson-link" data-title="Lesson 6: Switch & Ternary Operator" data-text="Switches handle multiple choices efficiently, while ternary is shorthand for if-else." data-file="lesson6.html">Lesson 6: Switch & Ternary Operator</li>
+        <li class="lesson-link" data-title="Lesson 7: OOP Concepts" data-text="Covers the four pillars: encapsulation, inheritance, polymorphism, and abstraction." data-file="lesson7.html">Lesson 7: OOP Concepts</li>
+        <li class="lesson-link" data-title="Lesson 8: OOP Principles in Action" data-text="Dive into Object-Oriented Programming principles in action." data-file="lesson8.html">Lesson 8: OOP Principles in Action</li>
+        <li class="lesson-link" data-title="Lesson 9: Arrays & Collections" data-text="Explore arrays and collections in Java for handling multiple data items efficiently." data-file="lesson9.html">Lesson 9: Arrays & Collections</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>TIPS</h2>
+      <ul class="tips">
+        <li>Tip 1: Master the Basics</li>
+        <li>Tip 2: Practice Consistently</li>
+        <li>Fun Fact: The initial name of Java was "Oak". It was created by accident.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- LESSON POPUP -->
+<div id="lessonScreen" class="lesson-screen">
+  <div class="lesson-box">
+    <h3 id="lessonTitle"></h3>
+    <p id="lessonBody"></p>
+    <span class="close-btn" onclick="closeLesson()">Close</span>
+    <a id="startLessonBtn" href="#" class="start-btn">Start Lesson</a>
+  </div>
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('.lesson-link');
+  const screenBox = document.getElementById('lessonScreen');
+  const title = document.getElementById('lessonTitle');
+  const body = document.getElementById('lessonBody');
+  const startBtn = document.getElementById('startLessonBtn');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      title.textContent = btn.dataset.title;
+      body.textContent = btn.dataset.text;
+      screenBox.style.display = 'grid';
+
+      // Link the "Start Lesson" button to the correct file
+      startBtn.href = btn.dataset.file;
+    });
+  });
+
+  function closeLesson() {
+    screenBox.style.display = 'none';
+  }
+</script>
+
+</body>
+</html>

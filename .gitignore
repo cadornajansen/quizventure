@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build & Dist
+dist/
+build/
+.next/
+out/
+
+# Database
+*.sql
+!create_tables.sql
+*.db
+*.sqlite
+
+# OS Files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Backend specific
+netlify/functions/node_modules/
+.netlify/
+
+# Testing
+.nyc_output/
+coverage/
+
+# Misc
+config.local.js
+*.zip
+!bimo_updated_files_with_gmail_in_analytics.zip

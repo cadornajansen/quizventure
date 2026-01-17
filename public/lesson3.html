@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 3: Declaring & Initializing Variables in Java | Quizventure Time</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Learn to declare and initialize variables in Java with examples and exercises!">
+
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* Global Styles */
+body {
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(135deg, #9ddcff 0%, #eaf7ff 50%, #ffd400 100%);
+  background-attachment: fixed;
+  margin: 0;
+  color: #333;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Navbar */
+    :root {
+  --bg-sky: #9ad0f5;
+  --ui-primary: #2c3e50;
+  --accent: #ffd54f;
+  --white: #ffffff;
+  --link: #00d4ff;
+  --shadow: rgba(0,0,0,0.35);
+}
+
+   .nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--ui-primary);
+  border-bottom: 4px solid #0f141b;
+  box-shadow: 0 4px 0 #0f141b;
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  text-shadow: 0 2px 0 #8a6f00;
+}
+.brand img {
+  width: 28px; height: 28px;
+}
+.nav-links {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+}
+.nav-links a {
+  padding: 8px 12px;
+  color: #e6f3ff;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border: 3px solid #0f141b;
+  background: #243a52;
+  box-shadow: 0 3px 0 #0f141b;
+}
+.nav-links a:hover {
+  filter: brightness(1.1);
+}
+.nav-links a.active {
+  background: #345474;
+  color: var(--accent);
+}
+
+/* Title */
+.title {
+  background: linear-gradient(45deg, #4aaef2, #55b6ff);
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 24px;
+  border-bottom: 6px solid black;
+  text-shadow: 2px 2px 0px #000;
+  transition: all 0.3s ease;
+}
+.title:hover {
+  letter-spacing: 3px;
+  transform: scale(1.02);
+}
+
+/* Progress Bar */
+.progress {
+  max-width: 1100px;
+  margin: 20px auto;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 20px;
+}
+.progress-bar {
+  background: linear-gradient(90deg, #ffd400, #ff6b35);
+  width: 44%; /* Progress for Lesson 4 */
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+/* Lesson Content */
+.lesson-content {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #c97b1d, #ff8c42);
+  border: 6px solid black;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.lesson-content h1 {
+  font-size: 20px;
+  color: #ffd400;
+  text-shadow: 1px 1px 0px #000;
+  margin-bottom: 20px;
+}
+
+.lesson-content h2 {
+  font-size: 16px;
+  color: #55b6ff;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.lesson-content p, .lesson-content ul {
+  font-size: 12px;
+  color: white;
+  margin: 10px 0;
+}
+.lesson-content ul {
+  padding-left: 20px;
+}
+.lesson-content li {
+  margin-bottom: 5px;
+}
+
+/* Summary Box */
+.summary {
+  background: linear-gradient(135deg, #43a6f0, #55b6ff);
+  border: 4px solid black;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  color: white;
+}
+.summary h3 {
+  font-size: 14px;
+  color: #ffd400;
+  margin-bottom: 10px;
+}
+
+/* Code Blocks */
+pre {
+  background: linear-gradient(135deg, #1e2a44, #2a3a5c);
+  color: #e0e0e0;
+  padding: 20px;
+  border: 4px solid black;
+  border-radius: 8px;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+pre:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(255,212,0,0.7), inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Navigation */
+.navigation {
+  text-align: center;
+  margin-top: 40px;
+}
+.navigation a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 15px;
+  padding: 10px 15px;
+  background: #1e1e1e;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+.navigation a:hover {
+  background: #ffd400;
+  color: black;
+  transform: translateY(-3px);
+}
+
+/* Footer */
+.footer {
+  background: #1e1e1e;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top: 4px solid #ffd400;
+}
+.footer a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Print Styles */
+@media print {
+  .navbar, .progress, .footer, .navigation {
+    display: none;
+  }
+  .lesson-content {
+    background: white;
+    border: none;
+    padding: 20px;
+    margin: 0;
+    color: black;
+  }
+  .summary {
+    background: #f4f4f4;
+    border: 1px solid #333;
+    color: black;
+  }
+  pre {
+    background: #f4f4f4;
+    color: black;
+    border: 1px solid #333;
+  }
+}
+
+@media screen and (max-width: 767px) {
+body {
+  background: url('respobg1.gif') no-repeat center center; 
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.nav-links {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.nav-links a {
+  flex: 1;
+  text-align: center;
+  display: flex;              /* ✅ icon + text side by side */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.nav-links a img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated; /* crisp retro look */
+}
+}
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .nav-links a img {
+    width: 14px;
+    height: 14px;
+  }
+}
+</style>
+  <script src="../js/auth.js"></script>
+</head>
+
+<body>
+  <script>qvRequireAuth({ redirectTo: "login.html" });</script>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="logo.png" alt="Quizventure brand" />
+        <span>Quizventure Time</span>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html">HOME</a>
+      <a href="bimo.html">QUIZ</a>
+      <a href="leader.html">LEADERBOARD</a>
+      <a href="aboutpage.html">ABOUT</a>
+      <a href="developers.html">Developers</a>
+      <a href="contact.html">CONTACT</a>
+      <a href="hsh.html">RESOURCES</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="title">LESSON 3: DECLARING & INITIALIZING VARIABLES</div>
+
+<div class="progress">
+  <div class="progress-bar"></div>
+</div>
+
+<main class="lesson-content">
+  <div class="summary">
+    <h3>Lesson Summary</h3>
+    <p>This lesson dives into declaring and initializing variables in Java, building on the basics of variables. Declaration introduces a variable to the compiler with its type and name, while initialization assigns an initial value. You'll learn the syntax, best practices, and how to handle different scenarios like multiple declarations or default values. Practical examples and exercises will help you master setting up variables for dynamic programs.</p>
+  </div>
+
+  <h1>Lesson 3: Declaring & Initializing Variables</h1>
+  <p>Declare a variable to tell Java its type and name, then initialize it with a value. It's like setting up your game character! Declaration reserves memory and defines the variable's properties, while initialization gives it a starting value. This two-step process ensures your code is clear and error-free.</p>
+
+  <h2>Declaration Syntax</h2>
+  <p>Use the data type followed by the variable name. No value is assigned yet.</p>
+  <pre>
+// Basic declaration
+int count;
+
+// Declaration with multiple variables
+int x, y, z;
+  </pre>
+  <p>Declarations must happen before use, and variables are case-sensitive.</p>
+
+  <h2>Initialization Syntax</h2>
+  <p>Assign a value using the equals sign (=). This can be done separately or combined with declaration.</p>
+  <pre>
+// Separate steps
+int count;
+count = 10;
+
+// Combined
+double price = 99.99;
+
+// Multiple initializations
+int a = 1, b = 2, c = 3;
+  </pre>
+  <p><em>Challenge:</em> Try declaring a String variable for your favorite game.</p>
+
+  <h2>Default Values and Uninitialized Variables</h2>
+  <p>If not initialized, local variables have no default value (compile error if used). Instance variables default to 0, false, or null based on type. Always initialize for safety!</p>
+
+  <h2>Best Practices</h2>
+  <p>Declare variables close to use, use descriptive names, and initialize immediately when possible. Avoid global variables unless necessary.</p>
+
+  <h2>Examples and Code Snippets</h2>
+  <p>See declaration and initialization in action.</p>
+  <pre>
+// Example setup
+String playerName;
+int playerScore;
+
+playerName = "Hero";
+playerScore = 1500;
+
+System.out.println(playerName + " has " + playerScore + " points.");
+  </pre>
+
+  <h2>Try It Yourself: Declaration & Initialization Exercises</h2>
+  <p>Run these in a Java environment to practice.</p>
+  <h3>Exercise 1: Basic Declaration and Initialization</h3>
+  <pre>
+public class DeclareInitDemo {
+  public static void main(String[] args) {
+    // Declare
+    String itemName;
+    double itemPrice;
+    int itemQuantity;
+
+    // Initialize
+    itemName = "Potion";
+    itemPrice = 25.50;
+    itemQuantity = 5;
+
+    // Output
+    System.out.println("Item: " + itemName);
+    System.out.println("Price: $" + itemPrice);
+    System.out.println("Quantity: " + itemQuantity);
+    System.out.println("Total: $" + (itemPrice * itemQuantity));
+  }
+}
+// Output:
+// Item: Potion
+// Price: $25.5
+// Quantity: 5
+// Total: $127.5
+  </pre>
+
+  <h3>Exercise 2: Combined Declaration and Initialization</h3>
+  <pre>
+public class CombinedDemo {
+  public static void main(String[] args) {
+    // Combined
+    String gameMode = "Adventure";
+    int levelsCompleted = 3;
+    boolean hasPowerUp = true;
+
+    // Modify
+    levelsCompleted += 2;  // Increment
+    hasPowerUp = false;
+
+    System.out.println("Mode: " + gameMode);
+    System.out.println("Levels: " + levelsCompleted);
+    System.out.println("Power-up: " + hasPowerUp);
+  }
+}
+// Output:
+// Mode: Adventure
+// Levels: 5
+// Power-up: false
+  </pre>
+
+  <h2>Common Pitfalls</h2>
+  <p>Watch for uninitialized use (causes errors) and type mismatches. Use final for constants.</p>
+  <p><em>Pro Tip:</em> In games, initialize player stats at the start for smooth gameplay.</p>
+
+  <div class="navigation">
+    <a href="lesson2.html"><i class="fas fa-arrow-left"></i> Previous: Lesson 2</a>
+   <a href="ok.html"><i class="fas fa-home"></i> Back to Lessons</a>
+    <a href="lesson4.html">Next: Lesson 4 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Ready to test your skills? Jump into the <a href="bimo.html">QUIZ</a> and climb the <a href="#">LEADERBOARD</a>! 🚀</p>
+  <p>&copy; 2026 Quizventure Time. Code your way to victory!</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel Shelf</title>
+  <!-- Pixel font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/venture.css" />
+
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="logo.png" alt="Quizventure brand" />
+        <span>Quizventure Time</span>
+      </div>
+      <div class="nav-links">
+      <a href="dashboard.html">HOME</a>
+      <a href="bimo.html">QUIZ</a>
+      <a href="leader.html" >LEADERBOARD</a>
+      <a href="aboutpage.html">ABOUT</a>
+      <a href="developers.html">Developers</a>
+      <a href="contact.html">CONTACT</a>
+      <a href="hsh.html" class="active">RESOURCES</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Stage -->
+  <section class="stage">
+    <div class="bg"></div>
+
+    <!-- Shelf Container -->
+    <div class="shelfWrap">
+      <div class="shelf">
+        <!-- Top Shelf -->
+    <a href="guides.pdf" class="item redBookWrap" download>
+  <img class="book" src="book2.png" alt="Red Book">
+  <span class="bookLabel redLabel">Downloadable Guides</span>
+</a>
+        <div class="item orangeBookWrap">
+          <img class="book" src="book3.png" alt="Orange Book">
+        </div>
+
+        <!-- Middle Shelf -->
+<a href="cheatsheets.pdf" class="item greenBookWrap" download>
+  <img class="book" src="book1.png" alt="Green Book">
+  <span class="bookLabel greenLabel">Cheating Sheets</span>
+</a>
+        <div class="item smallBooksWrap">
+          <img class="book" src="book4.png" alt="Books">
+        </div>
+
+    <!-- Bottom Shelf Buttons -->
+    <a href="linktodocs.docx" class="item btnDocs pixelBtn">LINKS TO DOCS</a>
+    <a href="ides.pdf" class="item btnIDEs pixelBtn">LINKS TO IDEs</a>
+  </div>
+</div>
+
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/hotdog.js"></script>
+</body>
+</html>

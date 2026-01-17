@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 7: OOP Concepts in Java | Quizventure Time</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Explore Object-Oriented Programming concepts in Java with examples!">
+
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* Global Styles */
+body {
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(135deg, #9ddcff 0%, #eaf7ff 50%, #ffd400 100%);
+  background-attachment: fixed;
+  margin: 0;
+  color: #333;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+    :root {
+  --bg-sky: #9ad0f5;
+  --ui-primary: #2c3e50;
+  --accent: #ffd54f;
+  --white: #ffffff;
+  --link: #00d4ff;
+  --shadow: rgba(0,0,0,0.35);
+}
+
+   .nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--ui-primary);
+  border-bottom: 4px solid #0f141b;
+  box-shadow: 0 4px 0 #0f141b;
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  text-shadow: 0 2px 0 #8a6f00;
+}
+.brand img {
+  width: 28px; height: 28px;
+}
+.nav-links {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+}
+.nav-links a {
+  padding: 8px 12px;
+  color: #e6f3ff;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border: 3px solid #0f141b;
+  background: #243a52;
+  box-shadow: 0 3px 0 #0f141b;
+}
+.nav-links a:hover {
+  filter: brightness(1.1);
+}
+.nav-links a.active {
+  background: #345474;
+  color: var(--accent);
+}
+
+/* Title */
+.title {
+  background: linear-gradient(45deg, #4aaef2, #55b6ff);
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 24px;
+  border-bottom: 6px solid black;
+  text-shadow: 2px 2px 0px #000;
+  transition: all 0.3s ease;
+}
+.title:hover {
+  letter-spacing: 3px;
+  transform: scale(1.02);
+}
+
+/* Progress Bar */
+.progress {
+  max-width: 1100px;
+  margin: 20px auto;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 20px;
+}
+.progress-bar {
+  background: linear-gradient(90deg, #ffd400, #ff6b35);
+  width: 77%; /* Progress for Lesson 7 */
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+/* Lesson Content */
+.lesson-content {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #c97b1d, #ff8c42);
+  border: 6px solid black;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.lesson-content h1 {
+  font-size: 20px;
+  color: #ffd400;
+  text-shadow: 1px 1px 0px #000;
+  margin-bottom: 20px;
+}
+
+.lesson-content h2 {
+  font-size: 16px;
+  color: #55b6ff;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.lesson-content p, .lesson-content ul {
+  font-size: 12px;
+  color: white;
+  margin: 10px 0;
+}
+.lesson-content ul {
+  padding-left: 20px;
+}
+.lesson-content li {
+  margin-bottom: 5px;
+}
+
+/* Summary Box */
+.summary {
+  background: linear-gradient(135deg, #43a6f0, #55b6ff);
+  border: 4px solid black;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  color: white;
+}
+.summary h3 {
+  font-size: 14px;
+  color: #ffd400;
+  margin-bottom: 10px;
+}
+
+/* Code Blocks */
+pre {
+  background: linear-gradient(135deg, #1e2a44, #2a3a5c);
+  color: #e0e0e0;
+  padding: 20px;
+  border: 4px solid black;
+  border-radius: 8px;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+pre:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(255,212,0,0.7), inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Navigation */
+.navigation {
+  text-align: center;
+  margin-top: 40px;
+}
+.navigation a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 15px;
+  padding: 10px 15px;
+  background: #1e1e1e;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+.navigation a:hover {
+  background: #ffd400;
+  color: black;
+  transform: translateY(-3px);
+}
+
+/* Footer */
+.footer {
+  background: #1e1e1e;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top: 4px solid #ffd400;
+}
+.footer a {
+  color: #ffd400;
+  text-decoration: none;
+  font-weight: bold;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Print Styles */
+@media print {
+  .navbar, .progress, .footer, .navigation {
+    display: none;
+  }
+  .lesson-content {
+    background: white;
+    border: none;
+    padding: 20px;
+    margin: 0;
+    color: black;
+  }
+  .summary {
+    background: #f4f4f4;
+    border: 1px solid #333;
+    color: black;
+  }
+  pre {
+    background: #f4f4f4;
+    color: black;
+    border: 1px solid #333;
+  }
+}
+
+@media screen and (max-width: 767px) {
+body {
+  background: url('respobg1.gif') no-repeat center center; 
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.nav-links {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.nav-links a {
+  flex: 1;
+  text-align: center;
+  display: flex;              /* ✅ icon + text side by side */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.nav-links a img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated; /* crisp retro look */
+}
+}
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .nav-links a img {
+    width: 14px;
+    height: 14px;
+  }
+}
+</style>
+  <script src="../js/auth.js"></script>
+</head>
+
+<body>
+  <script>qvRequireAuth({ redirectTo: "login.html" });</script>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="logo.png" alt="Quizventure brand" />
+        <span>Quizventure Time</span>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html">HOME</a>
+      <a href="bimo.html">QUIZ</a>
+      <a href="leader.html">LEADERBOARD</a>
+      <a href="aboutpage.html">ABOUT</a>
+      <a href="developers.html">Developers</a>
+      <a href="contact.html">CONTACT</a>
+      <a href="hsh.html">RESOURCES</a>
+      </div>
+    </div>
+  </nav>
+<div class="title">LESSON 7: OOP CONCEPTS</div>
+
+<div class="progress">
+  <div class="progress-bar"></div>
+</div>
+
+<main class="lesson-content">
+  <div class="summary">
+    <h3>Lesson Summary</h3>
+    <p>Object-Oriented Programming (OOP) treats code like real-world objects. It's the backbone of Java and makes complex programs manageable. This lesson covers the four pillars: encapsulation, inheritance, polymorphism, and abstraction. You'll learn how classes and objects model real-world entities, with definitions, benefits, and when to use each principle. Examples and exercises will demonstrate OOP in action, preparing you for building modular, reusable code.</p>
+  </div>
+
+  <h1>Lesson 7: OOP Concepts</h1>
+  <p>Object-Oriented Programming (OOP) treats code like real-world objects. It's the backbone of Java and makes complex programs manageable. OOP organizes code into objects that interact, promoting reusability, modularity, and maintainability. Unlike procedural programming, it focuses on "what" (objects) rather than "how" (steps).</p>
+
+  <h2>The Four Pillars of OOP</h2>
+  <ul>
+    <li><strong>Class:</strong> A blueprint for objects (e.g., a Car class defines properties like color and methods like drive).</li>
+    <li><strong>Object:</strong> An instance of a class (e.g., myCar is an object of Car).</li>
+    <li><strong>Encapsulation:</strong> Hiding data for security (using private fields and public methods).</li>
+    <li><strong>Inheritance:</strong> Reusing code from parent classes (e.g., Dog inherits from Animal).</li>
+    <li><strong>Polymorphism:</strong> One interface, many forms (e.g., method overriding for different behaviors).</li>
+    <li><strong>Abstraction:</strong> Focusing on essentials (hiding complexity with abstract classes/interfaces).</li>
+  </ul>
+  <p><em>Adventure Awaits:</em> OOP lets you create game characters with unique abilities!</p>
+
+  <h2>Benefits of OOP</h2>
+  <p>Easier maintenance, code reuse, scalability, and real-world modeling. It reduces bugs by isolating changes.</p>
+
+  <h2>When to Use OOP</h2>
+  <p>For large projects, simulations, or anything with entities that interact (e.g., games, apps).</p>
+
+  <h2>Examples and Code Snippets</h2>
+  <p>Basic OOP structure.</p>
+  <pre>
+// Class definition
+class Animal {
+  String name;
+  void eat() {
+    System.out.println(name + " is eating.");
+  }
+}
+
+// Object creation
+Animal dog = new Animal();
+dog.name = "Buddy";
+dog.eat();
+  </pre>
+
+  <h2>Try It Yourself: OOP Exercises</h2>
+  <p>Build and run these classes.</p>
+  <h3>Exercise 1: Basic Class and Object</h3>
+  <pre>
+// Define class
+class Player {
+  String name;
+  int health;
+
+  void display() {
+    System.out.println("Player: " + name + ", Health: " + health);
+  }
+}
+
+// Main class
+public class OOPDemo {
+  public static void main(String[] args) {
+    Player p1 = new Player();
+    p1.name = "Hero";
+    p1.health = 100;
+    p1.display();
+
+    Player p2 = new Player();
+    p2.name = "Villain";
+    p2.health = 80;
+    p2.display();
+  }
+}
+// Output:
+// Player: Hero, Health: 100
+// Player: Villain, Health: 80
+  </pre>
+
+  <h3>Exercise 2: Encapsulation Example</h3>
+  <pre>
+// Encapsulated class
+class BankAccount {
+  private double balance;
+
+  public void deposit(double amount) {
+    if (amount > 0) balance += amount;
+  }
+
+  public double getBalance() {
+    return balance;
+  }
+}
+
+// Usage
+public class EncapsulationDemo {
+  public static void main(String[] args) {
+    BankAccount acc = new BankAccount();
+    acc.deposit(500);
+    System.out.println("Balance: $" + acc.getBalance());
+    // acc.balance = -100; // Error: private
+  }
+}
+// Output:
+// Balance: $500.0
+  </pre>
+
+  <h2>Common Pitfalls and Tips</h2>
+  <p>Avoid overusing inheritance; prefer composition. Use meaningful class names. In games, model entities like Player or Enemy as classes.</p>
+  <p><em>Pro Tip:</em> Start small—design one class at a time.</p>
+
+  <div class="navigation">
+    <a href="lesson6.html"><i class="fas fa-arrow-left"></i> Previous: Lesson 6</a>
+    <a href="ok.html"><i class="fas fa-home"></i> Back to Lessons</a>
+    <a href="lesson8.html">Next: Lesson 8 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Ready to test your skills? Jump into the <a href="bimo.html">QUIZ</a> and climb the <a href="#">LEADERBOARD</a>! 🚀</p>
+  <p>&copy; 2026 Quizventure Time. Code your way to victory!</p>
+</footer>
+
+</body>
+</html>

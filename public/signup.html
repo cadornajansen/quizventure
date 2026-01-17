@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign up - Quizventure Time</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <div class="panel">
+      <h1 class="title small">SIGN UP</h1>
+
+      <form id="signupForm" class="form" autocomplete="on">
+        <label class="label">
+          Name
+          <input name="name" type="text" required class="input" autocomplete="name" />
+        </label>
+        <label class="label">
+          Email
+          <input name="email" type="email" required class="input" autocomplete="email" />
+        </label>
+        <label class="label">
+          Password
+          <input name="password" type="password" required class="input" minlength="6" autocomplete="new-password" />
+        </label>
+        <label class="label">
+          Confirm password
+          <input name="confirm" type="password" required class="input" minlength="6" autocomplete="new-password" />
+        </label>
+
+        <p id="error" class="error" role="alert"></p>
+
+        <button class="btn signup" type="submit">Create account</button>
+        <div class="row">
+          <a class="link" href="login.html">Already have an account? Log in</a>
+          <a class="link" href="index.html">Back</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/auth.js"></script>
+  <script>
+    const form = document.getElementById('signupForm');
+    const errorEl = document.getElementById('error');
+
+    if (qvGetCurrentUser()) {
+      location.replace('dashboard.html');
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorEl.textContent = '';
+
+      const data = new FormData(form);
+      const name = data.get('name');
+      const email = data.get('email');
+      const password = data.get('password');
+      const confirm = data.get('confirm');
+
+      if (String(password) !== String(confirm)) {
+        errorEl.textContent = 'Passwords do not match.';
+        return;
+      }
+
+      const res = qvSignup({ name, email, password });
+      if (!res.ok) {
+        errorEl.textContent = res.error;
+        return;
+      }
+
+      location.replace('dashboard.html');
+    });
+  </script>
+</body>
+</html>
+

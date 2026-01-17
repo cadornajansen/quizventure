@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log in - Quizventure Time</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <div class="panel">
+      <h1 class="title small">LOG IN</h1>
+
+      <form id="loginForm" class="form" autocomplete="on">
+        <label class="label">
+          Email
+          <input name="email" type="email" required class="input" autocomplete="email" />
+        </label>
+        <label class="label">
+          Password
+          <input name="password" type="password" required class="input" autocomplete="current-password" />
+        </label>
+
+        <p id="error" class="error" role="alert"></p>
+
+        <button class="btn start" type="submit">Log in</button>
+        <div class="row">
+          <a class="link" href="signup.html">No account? Sign up</a>
+          <a class="link" href="index.html">Back</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/auth.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const next = params.get('next') || 'dashboard.html';
+
+    const form = document.getElementById('loginForm');
+    const errorEl = document.getElementById('error');
+
+    // If already logged in, go straight to next
+    if (qvGetCurrentUser()) {
+      location.replace(next);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorEl.textContent = '';
+
+      const data = new FormData(form);
+      const email = data.get('email');
+      const password = data.get('password');
+
+      const res = qvLogin({ email, password });
+      if (!res.ok) {
+        errorEl.textContent = res.error;
+        return;
+      }
+      location.replace(next);
+    });
+  </script>
+</body>
+</html>
+

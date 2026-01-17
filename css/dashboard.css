@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #00A8B5;
+    font-family: "Press Start 2P", sans-serif;
+    color: white;
+}
+
+/* Cartoon-style Log Out button */
+.logout {
+    background: #F9B233;       /* same as other cartoon buttons */
+    border: 3px solid #000;
+    box-shadow: 3px 3px #000;
+    padding: 12px 20px;
+    font-size: 12px;
+    font-family: 'Press Start 2P', sans-serif;
+    cursor: pointer;
+    margin-left: auto;          /* move to right side */
+}
+
+/* Hover effect for fun cartoon feel */
+.logout:hover {
+    transform: translateY(-3px);
+    transition: 0.2s;
+}
+/* Top bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #B0391B;
+    border-bottom: 4px solid #000;
+    box-shadow: 0 4px #000;
+}
+
+.logo {
+    font-size: 18px;
+    text-shadow: 3px 3px #000;
+}
+
+.logout {
+    background: #FF677D;
+    padding: 10px 20px;
+    border: 3px solid #000;
+    box-shadow: 3px 3px #000;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* Content */
+.content {
+    padding: 30px;
+    text-align: center;
+}
+
+.welcome {
+    color: #F9F9F9;
+    margin-bottom: 30px;
+    text-shadow: 3px 3px #000;
+    font-size: 18px;
+}
+
+/* Cards */
+.cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.card {
+    background: #F9B233;
+    width: 80%;
+    max-width: 350px;
+    padding: 20px;
+    border: 4px solid #000;
+    box-shadow: 5px 5px #000;
+    cursor: pointer;
+    border-radius: 10px;
+    color: #000;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    transition: 0.2s;
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 10px;
+}
+
+@media screen and (max-width: 391px) {
+    body {
+        flex-direction: column;
+        height: 50%;
+        background-image: url('background.jpg');
+    }
+
+    .left-panel {
+        width: 100%;
+        padding: 20px;
+        text-align: right;
+    }
+
+    .title {
+        font-size: 24px;
+        line-height: 30px;
+    }
+
+    .btn {
+        width: 80%;
+        font-size: 10px;
+        padding: 10px 0;
+    }
+    
+} 
+
+/* Tablet (Portrait & Landscape: 768px–1023px) */ 
+@media (max-width: 1023px) and (min-width: 768px) { 
+    .grid { grid-template-columns: repeat(2, minmax(260px, 1fr)); } 
+    .ribbon { font-size: 14px; padding: 8px 14px; } 
+    .card { padding: 16px; } 
+    .lesson-box { width: 85vw; } 
+} 
+
+/* Phones (Portrait: ≤ 767px) */ 
+@media (max-width: 767px) { 
+    .grid { grid-template-columns: 1fr; } 
+    .ribbon { font-size: 12px; padding: 6px 10px; text-align: center; } 
+    .card { padding: 14px; margin-bottom: 16px; } 
+    .lesson-link, .button, .close-btn { font-size: 10px; padding: 8px 12px; } 
+    .lesson-box { width: 92vw; padding: 14px; } 
+}  
+/* Small Phones (≤ 480px) */ 
+@media (max-width: 480px) { 
+    .ribbon { font-size: 10px; padding: 4px 8px; } 
+    .card h2 { font-size: 12px; } 
+    .lesson-link { font-size: 9px; padding: 6px 10px; } }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizventure Time</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="left-panel">
+    <h1 class="title">QUIZVENTURE<br />TIME</h1>
+
+    <p id="welcomeLine" class="small-note" aria-live="polite"></p>
+
+    <button id="loginBtn" class="btn login" type="button">Log in</button>
+    <button id="signupBtn" class="btn signup" type="button">Sign up</button>
+    <button id="logoutBtn" class="btn logout" type="button" style="display:none;">Log out</button>
+
+    <button class="faq-btn" type="button" onclick="location.href='faq.html'">FAQ</button>
+  </div>
+
+  <script src="../js/auth.js"></script>
+  <script src="../js/auth.js"></script>
+<script>
+  const loginBtn = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const welcomeLine = document.getElementById('welcomeLine');
+
+  const user = qvGetCurrentUser();
+
+  if (user) {
+    welcomeLine.textContent = `Signed in as ${user.name}`;
+    loginBtn.style.display = 'none';
+    signupBtn.style.display = 'none';
+    logoutBtn.style.display = 'block';
+
+    logoutBtn.addEventListener('click', () => {
+      qvLogout();
+      location.reload();
+    });
+  } else {
+    welcomeLine.textContent = 'Sign in to save your progress.';
+    loginBtn.addEventListener('click', () => location.href = 'login.html');
+    signupBtn.addEventListener('click', () => location.href = 'signup.html');
+  }
+</script>
+
+</body>
+</html>
+
